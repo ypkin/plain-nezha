@@ -1,3 +1,7 @@
+# Plain
+
+本站点部署版：基于 [tom2almighty/monitor-theme-design](https://github.com/tom2almighty/monitor-theme-design) 定制，改名 Plain，整页扁平化，并新增解锁、已部署业务实查、流量校准等能力。部署走 Docker（见 `deploy/`），不再用主题包上传方式。
+
 # monitor-theme-design
 
 [monitor](https://github.com/monitor-probe/monitor) 的公开页主题。

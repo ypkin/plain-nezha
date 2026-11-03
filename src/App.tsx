@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
-import { ArrowUp, ChartLine, House, Monitor, Moon, Palette, Sparkles, Sun, UserRound, type LucideIcon } from "lucide-react"
+import { ArrowUp, ChartLine, House, Monitor, Moon, Sparkles, Sun, UserRound, type LucideIcon } from "lucide-react"
 
 import { NodePicker } from "@/components/NodePicker"
 import { ServerTable, ServerTableSkeleton } from "@/components/ServerTable"
@@ -230,7 +230,7 @@ function ThemeSettingsControl({
       </Button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1.5 z-50 w-72 rounded-xl border border-border/80 bg-popover p-3.5 text-popover-foreground shadow-xl backdrop-blur-md space-y-3.5">
+        <div className="absolute right-0 top-full mt-1.5 z-50 w-72 rounded-xl border border-border/80 bg-popover p-3.5 text-popover-foreground space-y-3.5">
           {/* Section 1: 主题配色 (tweakcn presets) */}
           <div>
             <div className="flex items-center justify-between pb-1.5 border-b border-border/60">
@@ -248,13 +248,13 @@ function ThemeSettingsControl({
                     className={cn(
                       "flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-xs transition-all text-left cursor-pointer",
                       active
-                        ? "border-primary bg-primary/10 text-foreground font-semibold shadow-2xs"
+                        ? "border-primary bg-primary/10 text-foreground font-semibold"
                         : "border-border/60 hover:bg-muted text-muted-foreground hover:text-foreground",
                     )}
                     title={t.desc}
                   >
                     <span
-                      className="size-3 rounded-full shrink-0 border border-black/10 dark:border-white/20 shadow-xs"
+                      className="size-3 rounded-full shrink-0 border border-black/10 dark:border-white/20"
                       style={{ backgroundColor: t.accentColor }}
                     />
                     <div className="min-w-0 flex-1">
@@ -345,7 +345,7 @@ function BackToTop() {
     <Button
       variant="outline"
       size="icon"
-      className="fixed right-6 bottom-6 z-30 rounded-full shadow-md max-md:right-4 max-md:bottom-4"
+      className="fixed right-6 bottom-6 z-30 rounded-full max-md:right-4 max-md:bottom-4"
       title="回到顶部"
       onClick={() => scrollTo({ top: 0, behavior: "smooth" })}
     >
@@ -453,7 +453,7 @@ export default function App() {
       )}
 
       {/* Standard full-width sticky navigation bar aligned with page measure */}
-      <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background">
         <div className={cn(CONTAINER_CLASS, "flex h-14 items-center justify-between gap-4")}>
           <div className="flex items-center gap-6 max-sm:gap-3">
             <Link href="/" className="flex min-w-0 items-center gap-2.5 font-semibold tracking-tight text-foreground transition-colors hover:opacity-90">
@@ -500,7 +500,7 @@ export default function App() {
       {/* Main body with unified container width */}
       <main className={cn(CONTAINER_CLASS, "flex-1 space-y-6 py-6 max-md:py-4")}>
         {notice ? (
-          <div className="flex items-start gap-2.5 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-foreground shadow-2xs">
+          <div className="flex items-start gap-2.5 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-foreground">
             <span className="font-semibold text-primary shrink-0">公告</span>
             <div className="min-w-0 flex-1 whitespace-pre-wrap">{notice}</div>
           </div>
@@ -538,17 +538,17 @@ export default function App() {
 
       {/* Footer with matching measure */}
       <footer className="border-t border-border/60 bg-background/50">
-        <div className={cn(CONTAINER_CLASS, "flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-5 text-xs text-muted-foreground")}>
+        <div className={cn(CONTAINER_CLASS, "flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-5 text-xs text-muted-foreground")}>
           <span>
             {site} · Powered by{" "}
-            <a href="https://github.com/monitor-probe/monitor" target="_blank" rel="noreferrer" className="font-medium hover:text-foreground">
-              monitor
+            <a href="https://github.com/nezhahq/nezha" target="_blank" rel="noreferrer" className="font-medium hover:text-foreground">
+              nezha V0
+            </a>
+            {" "}·{" "}
+            <a href={theme.url} target="_blank" rel="noreferrer" className="font-medium hover:text-foreground">
+              主题 {theme.short} · {theme.author}
             </a>
           </span>
-          <a href={theme.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:text-foreground">
-            <Palette className="size-3.5" />
-            主题 {theme.name} · {theme.author}
-          </a>
         </div>
       </footer>
 

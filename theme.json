@@ -1,6 +1,6 @@
 {
   "name": "monitor-theme-design",
-  "short": "Design",
+  "short": "Plain",
   "description": "Fork 自 stqfdyr/monitor-theme-serverstatus，融合 tweakcn 精选配色与 Zen Browser 噪点磨砂质感的现代化监控主题，支持深浅模式、实时换肤与无级质感微调",
   "version": "2.0.2",
   "author": "tom2almighty",

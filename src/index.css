@@ -168,3 +168,31 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='zenNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1.4 0 0 0 -0.2  0 1.4 0 0 -0.2  0 0 1.4 0 -0.2  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23zenNoise)'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
 }
+
+/* Stat bar shine text (ported from Prism v190, matching its dark-mode look):
+   flowing gradients for the live rates/totals and the busiest/fastest names.
+   The list's busiest/fastest row names wear the same gradients, so the row
+   names and the stat bar change colour together. In light mode the shine
+   spans get the same 1px black edge Prism uses over bright backgrounds. */
+.shine-up, .shine-down, .shine-busy, .shine-fast {
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shineFlow 3s linear infinite;
+}
+.shine-up { background-image: linear-gradient(110deg, #22d3ee 20%, #d8fbff 40%, #22d3ee 60%); }
+.shine-down { background-image: linear-gradient(110deg, #fde047 20%, #fefce8 40%, #fde047 60%); }
+.shine-busy { background-image: linear-gradient(110deg, #f0abfc 20%, #fdf4ff 40%, #f0abfc 60%); }
+.shine-fast { background-image: linear-gradient(110deg, #a5b4fc 20%, #eef2ff 40%, #a5b4fc 60%); }
+@keyframes shineFlow { to { background-position: -200% 0; } }
+html:not(.dark) .stat-bar span {
+  filter: drop-shadow(1px 0 0 #000) drop-shadow(-1px 0 0 #000) drop-shadow(0 1px 0 #000) drop-shadow(0 -1px 0 #000);
+}
+.stat-divider {
+  background: linear-gradient(to bottom, #4ade80, #22d3ee, #a78bfa, #4ade80);
+  background-size: 100% 300%;
+  animation: statDividerFlow 3s linear infinite;
+}
+@keyframes statDividerFlow { to { background-position: 0 -300%; } }

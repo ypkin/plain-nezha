@@ -53,7 +53,15 @@ export const RANGES = [
   { hours: 168, label: "7 天" },
 ]
 
-export const inRanges = (hours: number) => RANGES.some((r) => r.hours === hours)
+// Latency stops at a day, as on Prism since 2026-11-01: the 7-day latency
+// tab is removed, the resource charts keep it.
+export const LATENCY_RANGES = [
+  { hours: 1, label: "1 小时" },
+  { hours: 6, label: "6 小时" },
+  { hours: 24, label: "24 小时" },
+]
+
+export const inRanges = (hours: number) => LATENCY_RANGES.some((r) => r.hours === hours)
 
 // The expanded row's latency window to begin with: a day, the widest in which
 // every ping remains on the chart.

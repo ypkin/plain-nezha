@@ -29,31 +29,36 @@ function fits(field: ConfigField, value: unknown): boolean {
 export const fields = ((manifest as { config?: (ConfigField | { type: "title"; label: string })[] }).config ?? [])
   .filter((f): f is ConfigField => f.type !== "title")
 
-export async function loadConfig(): Promise<Record<string, unknown>> {
-  let saved: Record<string, unknown> = {}
+/* Nezha v0 standalone build: there is no hub to hold the theme config, so
+ * the "site default" lives in this browser's localStorage instead of the
+ * hub's `/api/themes/<short>/config` endpoint. Same merge semantics: a
+ * value equal to the field default is dropped, anything else overrides. */
+const CONFIG_KEY = "design-nezha:config"
+
+function readSaved(): Record<string, unknown> {
   try {
-    const res = await fetch(`/api/themes/${manifest.short}/config`)
-    if (res.ok) saved = await res.json()
+    const parsed = JSON.parse(localStorage.getItem(CONFIG_KEY) ?? "{}") as unknown
+    return parsed !== null && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {}
   } catch {
-    // 断网同样按默认值
+    return {}
   }
+}
+
+export async function loadConfig(): Promise<Record<string, unknown>> {
+  const saved = readSaved()
   const pick = (f: ConfigField) => (fits(f, saved[f.key]) ? saved[f.key] : f.default)
   return Object.fromEntries(fields.map((f) => [f.key, pick(f)]))
 }
 
 export async function saveConfig(values: Record<string, unknown>): Promise<void> {
-  const url = `/api/themes/${manifest.short}/config`
-  const read = await fetch(url)
-  if (!read.ok) throw new Error(await read.text())
-  const next: Record<string, unknown> = await read.json()
+  const next = readSaved()
   for (const f of fields) {
     if (values[f.key] === f.default) delete next[f.key]
     else if (values[f.key] !== undefined) next[f.key] = values[f.key]
   }
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(next),
-  })
-  if (!res.ok) throw new Error(await res.text())
+  try {
+    localStorage.setItem(CONFIG_KEY, JSON.stringify(next))
+  } catch {
+    throw new Error("浏览器存储不可用，无法保存")
+  }
 }

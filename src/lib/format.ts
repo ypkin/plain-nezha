@@ -54,25 +54,25 @@ export function rate(n: number): string {
 /**
  * The table's form: one letter of unit and no trailing zeros, so a column holds
  * "4.91K | 626B" in the width `bytes` spends on one side.
+ * K shows no decimals, M one decimal (M >= 100 drops it, so "100M" not "100.0M").
  */
 export function compact(n: number): string {
   if (!n || n < 1) return "0B"
   const i = unitOf(n)
   const v = n / 1024 ** i
-  return `${Number(v.toFixed(i === 0 || v >= 100 ? 0 : v >= 10 ? 1 : 2))}${UNITS[i][0]}`
+  const dec = i === 1 ? 0 : i === 2 ? (v >= 100 ? 0 : 1) : (i === 0 || v >= 100 ? 0 : v >= 10 ? 1 : 2)
+  return `${Number(v.toFixed(dec))}${UNITS[i][0]}`
 }
 
-/** Distribution and major version only: "Debian GNU/Linux 13 (trixie)" is "Debian 13". */
+/** Distribution name only, no version: "Debian GNU/Linux 13 (trixie)" is "Debian". */
 export function distro(os: string): string {
-  const name = os.trim().split(/\s+/)[0] ?? ""
-  const version = os.match(/\d+(?:\.\d+)?/)?.[0]
-  return version ? `${name} ${version}` : name
+  return os.trim().split(/\s+/)[0] ?? ""
 }
 
 /** Whole days once past one, a running clock below it. */
 export function duration(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds))
-  if (s >= 86400) return `${Math.floor(s / 86400)} 天`
+  if (s >= 86400) return `${Math.floor(s / 86400)}d`
   const pad = (n: number) => String(n).padStart(2, "0")
   return `${Math.floor(s / 3600)}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`
 }
@@ -147,7 +147,7 @@ export function uptime(seconds: number): string {
   const d = Math.floor(seconds / 86400)
   const h = Math.floor((seconds % 86400) / 3600)
   const m = Math.floor((seconds % 3600) / 60)
-  return d > 0 ? `${d} 天 ${h} 小时` : h > 0 ? `${h} 小时 ${m} 分` : `${m} 分`
+  return d > 0 ? `${d}d ${h}h` : h > 0 ? `${h}h ${m}m` : `${m}m`
 }
 
 /** Whole days until a date, negative once it has passed. */
@@ -172,13 +172,13 @@ export function money(amount: number, currency: string): string {
 }
 
 export const CYCLES: Record<string, string> = {
-  monthly: "月付",
-  quarterly: "季付",
-  semiannual: "半年付",
-  yearly: "年付",
-  biennial: "两年付",
-  triennial: "三年付",
-  once: "一次性",
+  monthly: "mo",
+  quarterly: "qtr",
+  semiannual: "6mo",
+  yearly: "yr",
+  biennial: "2yr",
+  triennial: "3yr",
+  once: "once",
 }
 
 // Hoisted out of `clock`: recharts calls a tickFormatter for every sample when

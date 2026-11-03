@@ -1,0 +1,19 @@
+services:
+  design:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: plain-frontend:latest
+    container_name: plain-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8086:80"
+    environment:
+      # 哪吒面板地址，必须以 / 结尾；按你自己的面板地址改
+      - NEZHA=http://127.0.0.1:8008/
+      - NEZHA_ORIGIN=http://127.0.0.1:8008
+      # 以下三个是本站点之外的配套小服务（均可留空对应功能、或删掉模板里对应 location）：
+      # 流量校准服务、解锁聚合服务、已部署业务汇总服务
+      - CAL=http://127.0.0.1:8090/
+      - UNLOCK=http://127.0.0.1:8091/
+      - SERVICES=http://127.0.0.1:8092/

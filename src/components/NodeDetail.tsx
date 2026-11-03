@@ -13,7 +13,7 @@ import type { Node } from "@/lib/api"
 import {
   axisBytes, axisTop, bytes, clockFor, despike, ewma, quarters, rate, timeTicks, uptime,
 } from "@/lib/format"
-import { fetchHistory, inRanges, LATENCY_HOURS, RANGES, type History, type Point, type Series } from "@/lib/history"
+import { fetchHistory, inRanges, LATENCY_HOURS, LATENCY_RANGES, RANGES, type History, type Point, type Series } from "@/lib/history"
 import { knownPing, recordPing } from "@/lib/pings"
 import { usePref } from "@/lib/prefs"
 import { cn } from "@/lib/utils"
@@ -33,7 +33,7 @@ const Y_WIDTH = 68
 // Hue alone separates the probes. A dash pattern would not: once every ping in a
 // day is on the chart its period is shorter than the jitter, and dotted and dashed
 // lines both read as texture.
-const PALETTE = [1, 2, 3, 4, 5].map((i) => `var(--color-chart-${i})`)
+const PALETTE = ["#f59e0b", "#3b82f6", "#22c55e", "#a855f7", "#f43f5e"]
 
 // recharts paints its tooltip white unless told otherwise, which is a white box
 // on the dark theme. Shaped like shadcn's chart tooltip: the popover surface,
@@ -50,7 +50,7 @@ const TIP = {
 
 function Panel({ title, children }: { title: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-border/80 bg-card p-4 shadow-xs">
+    <div className="rounded-lg border border-border/80 bg-card p-4">
       <h4 className="mb-3 text-xs font-semibold text-foreground">{title}</h4>
       <div className="h-64 w-full text-muted-foreground">{children}</div>
     </div>
@@ -307,7 +307,7 @@ export function Latency({
     onKnown?.(failed ? true : recordPing(id, has, hours))
   }, [data, loading, failed, id, has, hours, onKnown])
 
-  const frame = card ? "rounded-lg border border-border/80 bg-card p-4 shadow-xs" : ""
+  const frame = card ? "rounded-lg border border-border/80 bg-card p-4" : ""
   if (!data) return <div className={frame}><Skeleton className={cn("w-full", className)} /></div>
   if (failed) return <div className={frame}><Failed message={failed} retry={retry} /></div>
   // A node that has shown a probe keeps its section through an empty window,
@@ -321,20 +321,55 @@ export function Latency({
 
   return (
     <section className={cn("space-y-3", frame)}>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 max-md:gap-x-2">
         {fixed === undefined && (
           <Segmented
             value={hours}
             onChange={setPicked}
-            options={RANGES.map((r) => ({ value: r.hours, label: r.label }))}
+            options={LATENCY_RANGES.map((r) => ({ value: r.hours, label: r.label }))}
             label="时间范围"
-            className="h-7"
+            className="h-5 p-0 max-md:[&>button]:px-1.5"
           />
         )}
-        <div className="ml-auto flex gap-1">
+        {has && (
+          <div className="flex flex-wrap items-center gap-1.5 max-md:order-3 max-md:w-full max-md:flex-nowrap max-md:gap-1 md:ml-auto md:gap-2">
+            {pingSeries.map((s) => {
+              const shown = !hiddenProbes.includes(s.id)
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() =>
+                    setHiddenProbes((h) => (shown ? [...h, s.id] : h.filter((id) => id !== s.id)))
+                  }
+                  aria-pressed={shown}
+                  className={cn(
+                    "inline-flex h-5 items-center gap-1.5 rounded-md border px-2 text-xs font-medium transition-all hover:bg-muted max-md:min-w-0 max-md:flex-1 max-md:justify-center max-md:gap-1 max-md:px-1.5 md:px-1.5 md:text-[11px]",
+                    !shown ? "border-dashed border-border/60 opacity-40" : "border-border/80 bg-card",
+                  )}
+                >
+                  {/* The swatch carries the same colour as the line. */}
+                  <svg width="14" height="6" className="shrink-0" aria-hidden>
+                    <line x1="0" y1="3" x2="14" y2="3" stroke={color(s.id)} strokeWidth="2" />
+                  </svg>
+                  {s.name}
+                  {/* Always shown, since the line is only what answered and a probe
+                      dropping half its packets draws like a healthy one. Anything
+                      under a tenth is written as such rather than rounded to 0.0.
+                      On phones the loss figure is hidden so all probes fit one row. */}
+                  <span className="tnum font-normal text-muted-foreground max-md:hidden">
+                    {s.loss > 0 && s.loss < 0.1 ? "<0.1" : s.loss.toFixed(1)}%
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        )}
+        <div className="flex gap-1 max-md:ml-auto max-md:shrink-0">
           <Toggle
             pressed={despiked}
             onPressedChange={setDespiked}
+            className="max-md:px-1.5 h-5"
             title="把孤立的异常值换成邻近若干桶的中位数，持续的变化保持原样"
           >
             削峰
@@ -342,6 +377,7 @@ export function Latency({
           <Toggle
             pressed={smoothed}
             onPressedChange={setSmoothed}
+            className="max-md:px-1.5 h-5"
             title="指数加权移动平均（EWMA）：抹平逐桶的抖动，只看线路稳定在什么水平；单条探测时原始曲线淡淡地垫在下面"
           >
             平滑
@@ -349,39 +385,6 @@ export function Latency({
         </div>
       </div>
 
-      {has && (
-        <div className="flex flex-wrap items-center gap-1.5">
-          {pingSeries.map((s) => {
-            const shown = !hiddenProbes.includes(s.id)
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() =>
-                  setHiddenProbes((h) => (shown ? [...h, s.id] : h.filter((id) => id !== s.id)))
-                }
-                aria-pressed={shown}
-                className={cn(
-                  "inline-flex h-6 items-center gap-1.5 rounded-md border px-2 text-xs font-medium transition-all hover:bg-muted",
-                  !shown ? "border-dashed border-border/60 opacity-40" : "border-border/80 bg-card shadow-2xs",
-                )}
-              >
-                {/* The swatch carries the same colour as the line. */}
-                <svg width="14" height="6" className="shrink-0" aria-hidden>
-                  <line x1="0" y1="3" x2="14" y2="3" stroke={color(s.id)} strokeWidth="2" />
-                </svg>
-                {s.name}
-                {/* Always shown, since the line is only what answered and a probe
-                    dropping half its packets draws like a healthy one. Anything
-                    under a tenth is written as such rather than rounded to 0.0. */}
-                <span className="tnum font-normal text-muted-foreground">
-                  {s.loss > 0 && s.loss < 0.1 ? "<0.1" : s.loss.toFixed(1)}%
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      )}
 
       {!has ? (
         <p className="py-6 text-center text-sm text-muted-foreground">这段时间没有延迟数据</p>

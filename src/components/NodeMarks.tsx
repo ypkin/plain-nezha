@@ -46,14 +46,14 @@ export function Dot({ node, className }: { node: Node; className?: string }) {
       {isOnline ? (
         <>
           <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-50 animate-ping" />
-          <span className="relative size-full rounded-full bg-emerald-500 shadow-[0_0_0_1.5px_rgba(16,185,129,0.25)]" />
+          <span className="relative size-full rounded-full bg-emerald-500" />
         </>
       ) : (
         <span
           className={cn(
             "size-full rounded-full",
             isOffline
-              ? "bg-red-500 shadow-[0_0_0_1.5px_rgba(239,68,68,0.25)]"
+              ? "bg-red-500"
               : "bg-muted-foreground/40",
           )}
         />
@@ -136,7 +136,7 @@ export function Meter({
 // 2.2 to 5.49; `bytes` reaches 7.19 at "1023 MB"; `rate` 10.09 at "1023.0 MB/s".
 // Rounded up, since other UI fonts are a few percent wider than the one these
 // were measured in.
-export const SLOT = { compact: 5.6, bytes: 7.3, rate: 10.2 }
+export const SLOT = { compact: 7.2, bytes: 7.3, rate: 10.2 }
 
 /**
  * A figure that changes on every push, held in a slot wide enough for the widest

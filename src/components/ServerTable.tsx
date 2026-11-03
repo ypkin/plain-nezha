@@ -1,15 +1,15 @@
 import { useMemo, useState, type ReactNode } from "react"
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight, Search } from "lucide-react"
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react"
 
 import { Dot, Flag, Meter, Num, OsIcon, SLOT } from "@/components/NodeMarks"
 import { RowDetails } from "@/components/RowDetails"
+import { StatBar } from "@/components/StatBar"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import type { Node } from "@/lib/api"
-import { bytes, compact, daysUntil, distro, duration, FOREVER, monthUsage, pair, percent } from "@/lib/format"
+import { compact, CYCLES, daysUntil, distro, duration, FOREVER, money, percent } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
 /**
@@ -18,11 +18,11 @@ import { cn } from "@/lib/utils"
 function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const v = pct === null ? 0 : Math.min(100, Math.max(0, pct))
   return (
-    <div className="flex flex-col gap-1 min-w-0">
-      <span className="tnum truncate text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px]">
+    <div className="flex flex-col gap-0.5 min-w-0">
+      <span className="tnum truncate text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px]">
         {label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)}
       </span>
-      <Meter pct={pct} />
+      <Meter pct={pct} className="@max-sm:h-[2px]" />
     </div>
   )
 }
@@ -30,30 +30,34 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
 function Expiry({ node }: { node: Node }) {
   const days = node.expires_in !== undefined ? node.expires_in : daysUntil(node.expires_at)
   if (days === null) return <span className="text-muted-foreground" title="永不到期">{FOREVER}</span>
-  if (days < 0) return <Badge variant="destructive" className="px-1.5 py-0 text-[10px] font-normal">已过期</Badge>
-  if (days <= 7) return <Badge variant="warning" className="px-1.5 py-0 text-[10px] font-normal">{days} 天</Badge>
-  return <span className="text-foreground">{days} 天</span>
+  if (days < 0) return <Badge variant="destructive" className="px-1.5 py-0 text-[10px] font-normal @max-sm:text-[11px]">Expired</Badge>
+  if (days <= 7) return <Badge variant="warning" className="px-1.5 py-0 text-[10px] font-normal @max-sm:text-[11px]">{days}d</Badge>
+  return <span>{days}d</span>
 }
 
 /**
  * Column widths and responsive folding.
  * On wide screens (max-w-7xl), all 12 columns are comfortably displayed.
  * On smaller screens, secondary columns gracefully hide.
+ * Compact PC rule: fixed layout at every width (previously table-fixed only
+ * kicked in below 3xl, so on wide PC the browser auto-stretched columns and
+ * rows looked loose). Wide percentages below sum to 100%; the @max-3xl and
+ * @max-sm overrides for narrow/mobile are untouched.
  */
 const COL = {
-  status: "w-12 text-center @max-3xl:w-[6%]",
-  name: "min-w-28 max-w-56 truncate text-left font-medium @max-3xl:w-[19%] @max-3xl:max-w-none @max-3xl:min-w-0 @max-sm:w-[22%]",
-  location: "w-16 text-center @max-3xl:w-[7%] @max-sm:hidden",
-  os: "w-28 text-center @max-5xl:hidden",
-  uptime: "w-20 text-center @max-3xl:hidden",
-  expiry: "w-20 text-center @max-5xl:hidden",
-  load: "w-16 text-center @max-3xl:hidden",
-  speed: "min-w-28 text-center @max-3xl:w-[15%] @max-3xl:min-w-0 @max-sm:w-[16%] overflow-hidden",
-  bar: "w-20 min-w-16 text-center @max-3xl:w-[10%] @max-3xl:min-w-0 @max-sm:w-[11%] overflow-hidden",
-  traffic: "w-28 min-w-22 text-center @max-3xl:w-[23%] @max-3xl:min-w-0 @max-sm:w-[23%] overflow-hidden",
+  status: "w-[4%] text-center @max-3xl:w-[6%] @max-sm:py-0.5 py-1",
+  name: "min-w-28 max-w-56 truncate text-left font-medium w-[8%] @max-3xl:w-[19%] @max-3xl:max-w-none @max-3xl:min-w-0 @max-sm:w-[22%] @max-sm:py-0.5 py-1",
+  location: "w-[5%] text-center @max-3xl:w-[7%] @max-sm:hidden py-1",
+  os: "w-[10%] text-center @max-5xl:hidden py-1",
+  uptime: "w-[6%] text-center @max-3xl:hidden py-1",
+  expiry: "w-[9%] text-center @max-3xl:w-[18%] @max-sm:w-[12%] @max-3xl:min-w-0 overflow-hidden @max-sm:py-0.5 py-1",
+  load: "w-[4%] text-center @max-3xl:hidden py-1",
+  speed: "min-w-28 text-center w-[8%] @max-3xl:w-[19%] @max-3xl:min-w-0 @max-sm:w-[21%] overflow-hidden @max-sm:py-0.5 py-1",
+  bar: "w-[8%] min-w-16 text-center @max-3xl:w-[10%] @max-3xl:min-w-0 @max-sm:w-[13%] overflow-hidden @max-sm:py-0.5 py-1",
+  price: "w-[10%] min-w-22 text-center @max-3xl:hidden py-1",
 }
 
-type SortField = "name" | "uptime" | "load" | "speed" | "cpu" | "mem" | "disk" | "traffic"
+type SortField = "name" | "uptime" | "load" | "speed" | "cpu" | "mem" | "disk" | "price"
 type SortOrder = "asc" | "desc"
 
 function sortNodes(nodes: Node[], field: SortField | null, order: SortOrder): Node[] {
@@ -95,8 +99,8 @@ function sortNodes(nodes: Node[], field: SortField | null, order: SortOrder): No
         res = pa - pb
         break
       }
-      case "traffic":
-        res = monthUsage(a) - monthUsage(b)
+      case "price":
+        res = a.price - b.price
         break
     }
 
@@ -104,11 +108,11 @@ function sortNodes(nodes: Node[], field: SortField | null, order: SortOrder): No
   })
 }
 
-function Row({ node }: { node: Node }) {
-  const [open, setOpen] = useState(false)
+// Accordion: the open row is owned by ServerTable, not by each row,
+// so opening one node always closes the previously opened one.
+function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fast" | "both" | null; open: boolean; onToggle: () => void }) {
   const m = node.online ? node.metrics : null
-  const traffic = monthUsage(node)
-  const toggle = () => setOpen((o) => !o)
+  const toggle = onToggle
 
   return (
     <>
@@ -123,58 +127,84 @@ function Row({ node }: { node: Node }) {
         )}
       >
         <TableCell className={cn(COL.status, "text-center")}>
-          <div className="flex items-center justify-center">
-            <Dot node={node} />
+          <div className="flex items-center justify-center @max-sm:hidden">
+            {badge ? (
+              <span className="inline-flex items-center gap-0.5 text-[13px] leading-none">
+                {(badge === "busy" || badge === "both") && (
+                  <span title="最忙节点" className={cn(m && m.cpu > 15 && "animate-pulse")}>🔥</span>
+                )}
+                {(badge === "fast" || badge === "both") && (
+                  <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
+                )}
+              </span>
+            ) : (
+              <Dot node={node} />
+            )}
+          </div>
+          {/* Phones: the flag stands in for the dot — full colour online with a
+              tiny green dot beside it, dimmed offline. A busy/fastest mark
+              replaces it, side by side when one node is both. */}
+          <div className="hidden items-center justify-center @max-sm:flex">
+            {badge ? (
+              <span
+                className={cn(
+                  "relative inline-flex leading-none",
+                  badge === "both" ? "flex-row items-center gap-0.5 text-[10px] scale-50" : "items-center text-[13px]",
+                )}
+              >
+                {(badge === "busy" || badge === "both") && (
+                  <span title="最忙节点" className={cn(m && m.cpu > 15 && "animate-pulse")}>🔥</span>
+                )}
+                {(badge === "fast" || badge === "both") && (
+                  <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
+                )}
+              </span>
+            ) : (
+              <span className={cn("size-2 rounded-full", node.online ? "bg-green-500" : "bg-muted-foreground/40")} />
+            )}
           </div>
         </TableCell>
         <TableCell className={cn(COL.name, "text-left font-medium")} title={node.name}>
           <div className="flex items-center gap-1.5 min-w-0">
-            <ChevronRight className={cn("size-3.5 shrink-0 text-muted-foreground/50 transition-transform duration-200", open && "rotate-90 text-foreground")} />
-            <span className="truncate">{node.name}</span>
+            <ChevronRight className={cn("size-3.5 shrink-0 text-muted-foreground/50 transition-transform duration-200 @max-sm:hidden", open && "rotate-90 text-foreground")} />
+            <span className="hidden shrink-0 @max-sm:inline-flex">
+              <Flag code={node.country} showCode={false} className="[&_img]:h-3 [&_img]:w-3 [&_img]:rounded-full" />
+            </span>
+            <span
+              className={cn("truncate text-muted-foreground", badge === "busy" || badge === "both" ? "shine-busy" : badge === "fast" ? "shine-fast" : undefined)}
+              title={node.name}
+            >
+              {node.name}
+            </span>
           </div>
         </TableCell>
-        <TableCell className={COL.location}><Flag code={node.country} /></TableCell>
-        <TableCell className={COL.os}>
+        <TableCell className={cn(COL.location, "text-muted-foreground")}><Flag code={node.country} /></TableCell>
+        <TableCell className={cn(COL.os, "text-muted-foreground")}>
           <span className="inline-flex items-center justify-center gap-1.5">
             <OsIcon os={node.os} />
             <span className="truncate">{distro(node.os) || "—"}</span>
           </span>
         </TableCell>
-        <TableCell className={cn(COL.uptime, "tnum")}>{m ? duration(m.uptime) : "—"}</TableCell>
-        <TableCell className={cn(COL.expiry, "tnum")}><Expiry node={node} /></TableCell>
-        <TableCell className={cn(COL.load, "tnum")}>{m ? m.load[0].toFixed(2) : "—"}</TableCell>
+        <TableCell className={cn(COL.uptime, "tnum text-muted-foreground")}>{m ? duration(m.uptime) : "—"}</TableCell>
+        <TableCell className={cn(COL.load, "tnum text-muted-foreground")}>{m ? m.load[0].toFixed(2) : "—"}</TableCell>
         <TableCell className={COL.speed}>
           {m ? (
-            <div className="inline-flex items-center justify-center text-xs @max-3xl:flex @max-3xl:flex-col @max-3xl:items-center @max-3xl:gap-0.5 @max-3xl:text-[9px] @max-3xl:leading-none">
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowDown className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0 @max-3xl:size-2.5" />
-                <Num ch={SLOT.compact} className="@max-3xl:min-w-0">{compact(m.net_rx)}</Num>
-              </span>
-              <span className="mx-1 text-muted-foreground/60 @max-3xl:hidden">|</span>
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowUp className="size-3 text-blue-600 dark:text-blue-400 shrink-0 @max-3xl:size-2.5" />
-                <Num ch={SLOT.compact} className="@max-3xl:min-w-0">{compact(m.net_tx)}</Num>
-              </span>
+            <div className="inline-flex items-center justify-center gap-1 whitespace-nowrap text-xs @max-3xl:text-[9px] @max-3xl:leading-none @max-sm:text-[11px] @max-sm:gap-0.5 text-muted-foreground">
+              <Num ch={SLOT.compact} className="@max-3xl:min-w-0">{compact(m.net_tx)}</Num>
+              <span className="text-muted-foreground/60">|</span>
+              <Num ch={SLOT.compact} className="@max-3xl:min-w-0 text-left">{compact(m.net_rx)}</Num>
             </div>
           ) : (
-            <span className="text-muted-foreground text-xs @max-3xl:text-[9px]">
-              <span className="@max-3xl:hidden">— | —</span>
-              <span className="hidden @max-3xl:inline">—</span>
-            </span>
+            <span className="text-muted-foreground text-xs @max-3xl:text-[9px] @max-sm:text-[11px]">— | —</span>
           )}
         </TableCell>
         <TableCell className={COL.bar}><Bar pct={m ? m.cpu : null} /></TableCell>
         <TableCell className={COL.bar}><Bar pct={m ? percent(m.mem_used, m.mem_total) : null} /></TableCell>
         <TableCell className={COL.bar}><Bar pct={m ? percent(m.disk_used, m.disk_total) : null} /></TableCell>
-        <TableCell
-          className={COL.traffic}
-          title={`本期已用 ${node.traffic_limit > 0 ? `${pair(traffic, node.traffic_limit)}（${((traffic / node.traffic_limit) * 100).toFixed(1)}%）` : `${bytes(traffic)} · 无流量配额`}`}
-        >
-          <Bar
-            pct={node.traffic_limit > 0 ? percent(traffic, node.traffic_limit) : null}
-            label={`${compact(traffic)} / ${node.traffic_limit > 0 ? compact(node.traffic_limit) : FOREVER}`}
-          />
+        <TableCell className={cn(COL.price, "tnum text-muted-foreground")}>
+          {node.price > 0 ? `${money(node.price, node.currency)} / ${CYCLES[node.billing_cycle] ?? node.billing_cycle}` : "Free"}
         </TableCell>
+        <TableCell className={cn(COL.expiry, "tnum text-muted-foreground")}><Expiry node={node} /></TableCell>
       </TableRow>
       {open && (
         <TableRow className="border-b bg-muted/25 hover:bg-muted/25">
@@ -206,7 +236,7 @@ function SortableHead({
   return (
     <TableHead
       className={cn(
-        "group h-9 px-2 text-center text-xs font-medium text-muted-foreground transition-colors @max-3xl:px-0.5 @max-3xl:text-[10px]",
+        "group h-9 px-2 text-center text-xs font-medium text-muted-foreground transition-colors @max-3xl:px-0.5 @max-3xl:text-[10px] @max-sm:text-[11px]",
         COL[col],
         col === "name" && "text-left",
         field && "cursor-pointer select-none hover:text-foreground",
@@ -230,7 +260,7 @@ function SortableHead({
 }
 
 export function ServerTable({ nodes }: { nodes: Node[] }) {
-  const [query, setQuery] = useState("")
+  const [openId, setOpenId] = useState<number | null>(null)
   const [sortField, setSortField] = useState<SortField | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
 
@@ -264,16 +294,20 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
     return nodes.filter((n) => n.group === selectedGroup)
   }, [nodes, selectedGroup])
 
-  const online = groupNodes.filter((n) => n.online && n.metrics)
-  const live = (pick: (m: NonNullable<Node["metrics"]>) => number) => online.reduce((total, n) => total + pick(n.metrics!), 0)
-  const all = (pick: (n: Node) => number) => groupNodes.reduce((total, n) => total + pick(n), 0)
-
   const sortedNodes = useMemo(() => sortNodes(groupNodes, sortField, sortOrder), [groupNodes, sortField, sortOrder])
-  const q = query.trim().toLowerCase()
-  const filteredNodes = useMemo(() => {
-    if (!q) return sortedNodes
-    return sortedNodes.filter((n) => `${n.name} ${n.country} ${n.os} ${n.group ?? ""}`.toLowerCase().includes(q))
-  }, [sortedNodes, q])
+
+  // The stat bar's busiest/fastest designations, mirrored onto the rows
+  // (the Prism rule): that node's status dot becomes 🔥 / ⚡ instead.
+  const { busiestId, fastestId } = useMemo(() => {
+    let busy: { id: number; cpu: number } | null = null
+    let fast: { id: number; rx: number } | null = null
+    for (const node of groupNodes) {
+      if (!node.online || !node.metrics) continue
+      if (!busy || node.metrics.cpu > busy.cpu) busy = { id: node.id, cpu: node.metrics.cpu }
+      if (!fast || node.metrics.net_rx > fast.rx) fast = { id: node.id, rx: node.metrics.net_rx }
+    }
+    return { busiestId: busy?.id ?? null, fastestId: fast?.id ?? null }
+  }, [groupNodes])
 
   const heads: [keyof typeof COL, ReactNode, SortField?][] = [
     ["status", "状态"],
@@ -281,113 +315,33 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
     ["location", "位置"],
     ["os", "系统"],
     ["uptime", "在线", "uptime"],
-    ["expiry", "到期"],
     ["load", "负载", "load"],
-    ["speed", <>网速<span className="@max-3xl:hidden"> ↓|↑</span></>, "speed"],
+    ["speed", <>网速 ↑|↓</>, "speed"],
     ["bar", "CPU", "cpu"],
     ["bar", "内存", "mem"],
     ["bar", "硬盘", "disk"],
-    ["traffic", "流量", "traffic"],
+    ["price", "续费", "price"],
+    ["expiry", "到期"],
   ]
 
   return (
     <Card className="@container gap-0 overflow-hidden py-0">
-      {/* Fleet overview summary chips in header + Search filter */}
-      <CardHeader className="border-b border-border/60 py-3 sm:flex-row sm:items-center sm:justify-between max-md:px-3 gap-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-base">服务器列表</CardTitle>
-            <Badge variant="secondary" className="font-normal text-secondary-foreground text-[11px]">
-              {filteredNodes.length !== nodes.length ? `${filteredNodes.length} / ${nodes.length}` : `${nodes.length}`} 个节点
-            </Badge>
-          </div>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="快速过滤服务器..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="h-7 w-32 sm:w-44 pl-8 text-xs rounded-md bg-background/50"
-            />
-          </div>
-        </div>
-
-        <div className="tnum flex flex-wrap items-center gap-2 text-xs">
-          <div
-            className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-muted/40 px-2.5 py-1"
-            title="在线节点数 / 节点总数"
-          >
-            <span className="size-2 rounded-full bg-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]" />
-            <span className="text-muted-foreground">在线</span>
-            <span className="font-semibold text-foreground">
-              <Num ch={String(groupNodes.length).length}>{groupNodes.filter((n) => n.online).length}</Num> / {groupNodes.length}
-            </span>
-          </div>
-
-          <div
-            className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-muted/40 px-2.5 py-1"
-            title="在线节点此刻的下行与上行之和"
-          >
-            <span className="text-muted-foreground">网速</span>
-            <span className="font-semibold text-foreground inline-flex items-center gap-1.5 leading-none">
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowDown className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <Num ch={SLOT.compact}>{compact(live((m) => m.net_rx))}</Num>/s
-              </span>
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowUp className="size-3 text-blue-600 dark:text-blue-400 shrink-0" />
-                <Num ch={SLOT.compact}>{compact(live((m) => m.net_tx))}</Num>/s
-              </span>
-            </span>
-          </div>
-
-          <div
-            className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-muted/40 px-2.5 py-1"
-            title="所有节点本期的下载与上传之和"
-          >
-            <span className="text-muted-foreground">本月</span>
-            <span className="font-semibold text-foreground inline-flex items-center gap-1.5 leading-none">
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowDown className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <Num ch={SLOT.bytes}>{bytes(all((n) => n.month_rx))}</Num>
-              </span>
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowUp className="size-3 text-blue-600 dark:text-blue-400 shrink-0" />
-                <Num ch={SLOT.bytes}>{bytes(all((n) => n.month_tx))}</Num>
-              </span>
-            </span>
-          </div>
-
-          <div
-            className="inline-flex items-center gap-1.5 rounded-md border border-border/70 bg-muted/40 px-2.5 py-1 max-sm:hidden"
-            title="所有节点自接入以来的下载与上传之和"
-          >
-            <span className="text-muted-foreground">累计</span>
-            <span className="font-semibold text-foreground inline-flex items-center gap-1.5 leading-none">
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowDown className="size-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <Num ch={SLOT.bytes}>{bytes(all((n) => n.total_rx))}</Num>
-              </span>
-              <span className="inline-flex items-center gap-0.5 leading-none">
-                <ArrowUp className="size-3 text-blue-600 dark:text-blue-400 shrink-0" />
-                <Num ch={SLOT.bytes}>{bytes(all((n) => n.total_tx))}</Num>
-              </span>
-            </span>
-          </div>
-        </div>
+      {/* Header: the transplanted stat bar alone, sized to the card. */}
+      <CardHeader className="border-b border-border/60 px-3 py-2.5 max-md:px-1 xl:hidden">
+        <StatBar nodes={groupNodes} className="w-full" />
       </CardHeader>
 
       {/* Group selector pill bar (renders only when node groups exist) */}
       {groups.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto border-b border-border/60 bg-muted/20 px-3 py-2 text-xs scrollbar-none">
+        <div className="flex items-center gap-2 border-b border-border/60 bg-muted/20 px-3 py-1.5">
+          <div className="flex items-center gap-1 overflow-x-auto text-[11px] scrollbar-none">
           <button
             type="button"
             onClick={() => setSelectedGroup(null)}
             className={cn(
-              "shrink-0 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
+              "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
               selectedGroup === null
-                ? "bg-primary text-primary-foreground font-medium shadow-2xs"
+                ? "bg-primary text-primary-foreground font-medium"
                 : "bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground",
             )}
           >
@@ -401,9 +355,9 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
                 type="button"
                 onClick={() => setSelectedGroup(g)}
                 className={cn(
-                  "shrink-0 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
+                  "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
                   selectedGroup === g
-                    ? "bg-primary text-primary-foreground font-medium shadow-2xs"
+                    ? "bg-primary text-primary-foreground font-medium"
                     : "bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -416,20 +370,23 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
               type="button"
               onClick={() => setSelectedGroup("")}
               className={cn(
-                "shrink-0 rounded-md px-2.5 py-1 text-xs transition-colors cursor-pointer",
+                "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
                 selectedGroup === ""
-                  ? "bg-primary text-primary-foreground font-medium shadow-2xs"
+                  ? "bg-primary text-primary-foreground font-medium"
                   : "bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground",
               )}
             >
               未分组 ({nodes.filter((n) => !(n.group ?? "")).length})
             </button>
           )}
+          </div>
+          {/* Wide screens: the one-line stat bar fills the group bar's right side. */}
+          <StatBar nodes={groupNodes} variant="line" className="ml-auto max-xl:hidden" />
         </div>
       )}
 
       <CardContent className="p-0">
-        <Table className="text-center text-sm @max-3xl:table-fixed @max-3xl:text-[10px]">
+        <Table className="text-center text-sm table-fixed @max-3xl:text-[10px] @max-sm:text-xs">
           <TableHeader>
             <TableRow className="hover:bg-transparent bg-muted/20">
               {heads.map(([col, label, field], i) => (
@@ -445,16 +402,23 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody className="[&_td]:px-2 [&_td]:py-2 @max-3xl:[&_td]:px-0.5">
-            {filteredNodes.length === 0 ? (
+          {/* Mobile rows: 6px padding each side (desktop stays 4px). */}
+          <TableBody className="[&_td]:px-2 [&_td]:py-1 @max-3xl:[&_td]:px-0.5 @max-sm:[&_td]:py-[6px]">
+            {sortedNodes.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={12} className="py-12 text-center text-sm text-muted-foreground">
-                  没有匹配的服务器
+                  暂无服务器
                 </TableCell>
               </TableRow>
             ) : (
-              filteredNodes.map((n) => (
-                <Row key={n.id} node={n} />
+              sortedNodes.map((n) => (
+                <Row
+                  key={n.id}
+                  node={n}
+                  badge={n.id === busiestId && n.id === fastestId ? "both" : n.id === busiestId ? "busy" : n.id === fastestId ? "fast" : null}
+                  open={openId === n.id}
+                  onToggle={() => setOpenId((cur) => (cur === n.id ? null : n.id))}
+                />
               ))
             )}
           </TableBody>

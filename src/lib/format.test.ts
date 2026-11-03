@@ -98,9 +98,9 @@ for (const max of [3_000, 300_000, 3_000_000, 300_000_000]) {
 }
 
 eq(uptime(0), "—", "没上报过就不写时长")
-eq(uptime(90), "1 分", "不足一小时")
-eq(uptime(3 * 3600 + 25 * 60), "3 小时 25 分", "不足一天")
-eq(uptime(2 * 86400 + 5 * 3600), "2 天 5 小时", "超过一天不再写分钟")
+eq(uptime(90), "1m", "不足一小时")
+eq(uptime(3 * 3600 + 25 * 60), "3h 25m", "不足一天")
+eq(uptime(2 * 86400 + 5 * 3600), "2d 5h", "超过一天不再写分钟")
 
 eq(compact(0), "0B", "compact(0)")
 eq(compact(626), "626B", "compact 在 B 档不带小数")
@@ -109,15 +109,15 @@ eq(compact(1024 ** 3), "1G", "整数不写小数")
 eq(compact(4.914 * 1024), "4.91K", "一位数留两位小数")
 eq(compact(512.4 * 1024 ** 2), "512M", "三位数不留小数")
 
-eq(distro("Debian GNU/Linux 13 (trixie)"), "Debian 13", "Debian 只留主版本")
-eq(distro("Alpine Linux v3.24"), "Alpine 3.24", "Alpine 去掉 Linux 与 v")
-eq(distro("Ubuntu 24.04.1 LTS"), "Ubuntu 24.04", "Ubuntu 留到次版本")
+eq(distro("Debian GNU/Linux 13 (trixie)"), "Debian", "Debian 不带版本号")
+eq(distro("Alpine Linux v3.24"), "Alpine", "Alpine 不带版本号")
+eq(distro("Ubuntu 24.04.1 LTS"), "Ubuntu", "Ubuntu 不带版本号")
 eq(distro("Arch Linux"), "Arch", "没有版本号")
 eq(distro(""), "", "未上报")
 
 eq(duration(90), "0:01:30", "不足一小时")
 eq(duration(4 * 3600 + 26 * 60 + 44), "4:26:44", "不足一天走钟面")
-eq(duration(76 * 86400 + 5), "76 天", "超过一天只写天数")
+eq(duration(76 * 86400 + 5), "76d", "超过一天只写天数")
 
 {
   const node = { month_rx: 3, month_tx: 5, traffic_mode: "sum" }
