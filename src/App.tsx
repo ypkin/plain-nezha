@@ -463,7 +463,7 @@ export default function App() {
         <div className={cn(CONTAINER_CLASS, "flex h-14 items-center justify-between gap-4")}>
           <div className="flex items-center gap-6 max-sm:gap-3">
             <Link href="/" className="flex min-w-0 items-center gap-2.5 font-semibold tracking-tight text-foreground transition-colors hover:opacity-90">
-              <img src="/favicon.svg" alt="" className="size-5 shrink-0" />
+              <img src="/favicon.png" alt="" className="size-5 shrink-0" />
               <span className="truncate text-base font-bold">{site}</span>
             </Link>
             <nav aria-label="页面" className={cn(SEGMENT.list, "shrink-0")}>
