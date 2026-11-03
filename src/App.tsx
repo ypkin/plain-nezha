@@ -441,6 +441,12 @@ export default function App() {
 
   return (
     <div className="relative flex min-h-svh flex-col bg-background">
+      {/* Dotted world map backdrop (below content, above page background) */}
+      <div
+        className="dot-map-bg pointer-events-none fixed inset-0 z-0 select-none"
+        aria-hidden="true"
+      />
+
       {/* Zen Browser-style tactile grain overlay */}
       {grainPercent > 0 && (
         <div
@@ -498,7 +504,7 @@ export default function App() {
       </header>
 
       {/* Main body with unified container width */}
-      <main className={cn(CONTAINER_CLASS, "flex-1 space-y-6 py-6 max-md:py-4")}>
+      <main className={cn(CONTAINER_CLASS, "relative flex-1 space-y-6 py-6 max-md:py-4")}>
         {notice ? (
           <div className="flex items-start gap-2.5 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-foreground">
             <span className="font-semibold text-primary shrink-0">公告</span>
@@ -537,7 +543,7 @@ export default function App() {
       </main>
 
       {/* Footer with matching measure */}
-      <footer className="border-t border-border/60 bg-background/50">
+      <footer className="relative border-t border-border/60 bg-background/50">
         <div className={cn(CONTAINER_CLASS, "flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-5 text-xs text-muted-foreground")}>
           <span>
             {site} · Powered by{" "}
