@@ -3,6 +3,7 @@ import { ArrowUp, ChartLine, House, Monitor, Moon, Sparkles, Sun, UserRound, typ
 
 import { NodePicker } from "@/components/NodePicker"
 import { ServerTable, ServerTableSkeleton } from "@/components/ServerTable"
+import { DotMapBg } from "@/components/DotMapBg"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { SEGMENT, Segmented } from "@/components/ui/segmented"
@@ -416,6 +417,14 @@ export default function App() {
   }, [me])
 
   const sorted = [...(nodes ?? [])].sort((a, b) => a.sort - b.sort || a.id - b.id)
+  // Group filter lives here (not inside ServerTable) so the map below
+  // the list shows exactly the same nodes as the table.
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
+  const mapNodes = useMemo(() => {
+    if (selectedGroup === null) return sorted
+    if (selectedGroup === "") return sorted.filter((n) => !(n.group ?? ""))
+    return sorted.filter((n) => n.group === selectedGroup)
+  }, [sorted, selectedGroup])
   const selected = sorted.find((n) => n.id === open)
   const site = me?.site_name || "Monitor"
   const notice = typeof config?.notice === "string" ? config.notice.trim() : ""
@@ -441,12 +450,6 @@ export default function App() {
 
   return (
     <div className="relative flex min-h-svh flex-col bg-background">
-      {/* Dotted world map backdrop (below content, above page background) */}
-      <div
-        className="dot-map-bg pointer-events-none fixed inset-0 z-0 select-none"
-        aria-hidden="true"
-      />
-
       {/* Zen Browser-style tactile grain overlay */}
       {grainPercent > 0 && (
         <div
@@ -524,7 +527,11 @@ export default function App() {
           sorted.length === 0 ? (
             <Card className="py-16 text-center text-sm text-muted-foreground">还没有节点</Card>
           ) : (
-            <ServerTable nodes={sorted} />
+            <>
+              <ServerTable nodes={sorted} selectedGroup={selectedGroup} onSelectedGroupChange={setSelectedGroup} />
+              {/* Dotted world map below the server list, same nodes as the table */}
+              <DotMapBg nodes={mapNodes} />
+            </>
           )
         ) : selected ? (
           <Card className="grid gap-6 p-5 md:grid-cols-[220px_minmax(0,1fr)] max-md:gap-4 max-md:p-3">
@@ -547,7 +554,7 @@ export default function App() {
         <div className={cn(CONTAINER_CLASS, "flex flex-wrap items-center justify-center gap-x-4 gap-y-2 py-5 text-xs text-muted-foreground")}>
           <span>
             {site} · Powered by{" "}
-            <a href="https://github.com/nezhahq/nezha" target="_blank" rel="noreferrer" className="font-medium hover:text-foreground">
+            <a href="https://github.com/railzen/nezha-zero" target="_blank" rel="noreferrer" className="font-medium hover:text-foreground">
               nezha V0
             </a>
             {" "}·{" "}

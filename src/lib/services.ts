@@ -14,7 +14,7 @@ export const NODE_SERVICES: Record<string, string[]> = {
   sailor: ["hy2", "nezha-agent", "WARP", "rkm", "x-ui"],
   haruka: ["哪吒面板", "hy2", "sing-box", "nezha-agent", "nginx"],
   kuroit: ["博客", "hy2", "nezha-agent", "DNS解锁", "tabby", "sing-box"],
-  exact: ["LanQin 邮箱", "Plain 前端", "nezha-agent", "hy2"],
+  exact: ["LanQin 邮箱", "Plain 前端", "Prism 前端", "nazhua 前端", "nezha-agent", "hy2"],
   cheap1: ["hy2", "nezha-agent"],
   cheap2: ["hy2", "nezha-agent"],
   cc: ["hy2", "nezha-agent"],

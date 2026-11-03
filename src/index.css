@@ -172,26 +172,6 @@
 /* Dotted world map backdrop (public/dot-map.svg, black dots on transparent,
    generated from Natural Earth data). The SVG is used as a mask over a faint
    theme-aware tint, so one asset serves both light and dark mode. */
-.dot-map-bg {
-  -webkit-mask-image: url("/dot-map.svg");
-  mask-image: url("/dot-map.svg");
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  background-color: rgb(0 0 0 / 0.15);
-}
-.dark .dot-map-bg {
-  background-color: rgb(255 255 255 / 0.15);
-}
-@media (max-width: 768px) {
-  .dot-map-bg {
-    -webkit-mask-size: 200% auto;
-    mask-size: 200% auto;
-  }
-}
 
 /* Stat bar shine text (ported from Prism v190, matching its dark-mode look):
    flowing gradients for the live rates/totals and the busiest/fastest names.

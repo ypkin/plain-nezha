@@ -259,7 +259,7 @@ function SortableHead({
   )
 }
 
-export function ServerTable({ nodes }: { nodes: Node[] }) {
+export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { nodes: Node[]; selectedGroup: string | null; onSelectedGroupChange: (g: string | null) => void }) {
   const [openId, setOpenId] = useState<number | null>(null)
   const [sortField, setSortField] = useState<SortField | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
@@ -277,8 +277,6 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
       setSortOrder("desc")
     }
   }
-
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
 
   const groups = useMemo(() => {
     return [...new Set(nodes.map((n) => n.group ?? "").filter(Boolean))]
@@ -337,7 +335,7 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
           <div className="flex items-center gap-1 overflow-x-auto text-[11px] scrollbar-none">
           <button
             type="button"
-            onClick={() => setSelectedGroup(null)}
+            onClick={() => onSelectedGroupChange(null)}
             className={cn(
               "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
               selectedGroup === null
@@ -353,7 +351,7 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
               <button
                 key={g}
                 type="button"
-                onClick={() => setSelectedGroup(g)}
+                onClick={() => onSelectedGroupChange(g)}
                 className={cn(
                   "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
                   selectedGroup === g
@@ -368,7 +366,7 @@ export function ServerTable({ nodes }: { nodes: Node[] }) {
           {hasUngrouped && (
             <button
               type="button"
-              onClick={() => setSelectedGroup("")}
+              onClick={() => onSelectedGroupChange("")}
               className={cn(
                 "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
                 selectedGroup === ""
