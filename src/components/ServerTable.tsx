@@ -22,7 +22,7 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
       <span className="tnum truncate text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px]">
         {label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)}
       </span>
-      <Meter pct={pct} className="@max-sm:h-[2px]" />
+      <Meter pct={pct} floor={5} className="@max-sm:h-[2px]" />
     </div>
   )
 }
@@ -53,6 +53,7 @@ const COL = {
   expiry: "w-[6%] text-center @max-3xl:w-[18%] @max-sm:w-[12%] @max-3xl:min-w-0 overflow-hidden @max-sm:py-0.5 py-1",
   load: "w-[4%] text-center @max-3xl:hidden py-1",
   speed: "min-w-28 text-center w-[8%] @max-3xl:w-[19%] @max-3xl:min-w-0 @max-sm:w-[21%] overflow-hidden @max-sm:py-0.5 py-1",
+  traffic: "min-w-28 text-center w-[8%] @max-3xl:hidden py-1",
   bar: "w-[8%] min-w-16 text-center @max-3xl:w-[10%] @max-3xl:min-w-0 @max-sm:w-[13%] overflow-hidden @max-sm:py-0.5 py-1",
   price: "w-[7%] min-w-22 text-center @max-3xl:hidden py-1",
 }
@@ -129,12 +130,12 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
         <TableCell className={cn(COL.status, "text-center")}>
           <div className="flex items-center justify-center @max-sm:hidden">
             {badge ? (
-              <span className="inline-flex items-center gap-0.5 text-[13px] leading-none">
+              <span className="inline-flex items-center gap-0 text-[13px] leading-none">
                 {(badge === "busy" || badge === "both") && (
                   <span title="最忙节点" className={cn(m && m.cpu > 15 && "animate-pulse")}>🔥</span>
                 )}
                 {(badge === "fast" || badge === "both") && (
-                  <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
+                  <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse", badge === "both" && "-ml-1")}>⚡</span>
                 )}
               </span>
             ) : (
@@ -149,14 +150,14 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
               <span
                 className={cn(
                   "relative inline-flex leading-none",
-                  badge === "both" ? "flex-row items-center gap-0.5 text-[10px] scale-50" : "items-center text-[13px]",
+                  badge === "both" ? "flex-row items-center gap-0 text-[13px]" : "items-center text-[13px]",
                 )}
               >
                 {(badge === "busy" || badge === "both") && (
                   <span title="最忙节点" className={cn(m && m.cpu > 15 && "animate-pulse")}>🔥</span>
                 )}
                 {(badge === "fast" || badge === "both") && (
-                  <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
+                  <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse", badge === "both" && "-ml-1")}>⚡</span>
                 )}
               </span>
             ) : (
@@ -190,13 +191,21 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
         <TableCell className={COL.speed}>
           {m ? (
             <div className="inline-flex items-center justify-center gap-1 whitespace-nowrap text-xs @max-3xl:text-[9px] @max-3xl:leading-none @max-sm:text-[11px] @max-sm:gap-0.5 text-muted-foreground">
-              <Num ch={SLOT.compact} className="@max-3xl:min-w-0">{compact(m.net_tx)}</Num>
+              {/* 移动端竖线对齐：两边各留 5ch 固定槽（compact 最宽约 5.1ch，5ch 槽刚好塞进 21% 列宽），竖线位置不再随数字长短跑 */}
+              <Num ch={SLOT.compact} className="@max-3xl:min-w-[5ch]">{compact(m.net_tx)}</Num>
               <span className="text-muted-foreground/60">|</span>
-              <Num ch={SLOT.compact} className="@max-3xl:min-w-0 text-left">{compact(m.net_rx)}</Num>
+              <Num ch={SLOT.compact} className="@max-3xl:min-w-[5ch] text-left">{compact(m.net_rx)}</Num>
             </div>
           ) : (
             <span className="text-muted-foreground text-xs @max-3xl:text-[9px] @max-sm:text-[11px]">— | —</span>
           )}
+        </TableCell>
+        <TableCell className={COL.traffic}>
+          <div className="inline-flex items-center justify-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
+            <Num ch={SLOT.compact} className="@max-3xl:min-w-0">{compact(node.total_tx)}</Num>
+            <span className="text-muted-foreground/60">|</span>
+            <Num ch={SLOT.compact} className="@max-3xl:min-w-0 text-left">{compact(node.total_rx)}</Num>
+          </div>
         </TableCell>
         <TableCell className={COL.bar}><Bar pct={m ? m.cpu : null} /></TableCell>
         <TableCell className={COL.bar}><Bar pct={m ? percent(m.mem_used, m.mem_total) : null} /></TableCell>
@@ -208,7 +217,7 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
       </TableRow>
       {open && (
         <TableRow className="border-b bg-muted/25 hover:bg-muted/25">
-          <TableCell colSpan={12} className="p-0! text-left whitespace-normal">
+          <TableCell colSpan={13} className="p-0! text-left whitespace-normal">
             <RowDetails node={node} />
           </TableCell>
         </TableRow>
@@ -315,6 +324,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
     ["uptime", "在线", "uptime"],
     ["load", "负载", "load"],
     ["speed", <>网速 ↑|↓</>, "speed"],
+    ["traffic", <>流量 ↑|↓</>],
     ["bar", "CPU", "cpu"],
     ["bar", "内存", "mem"],
     ["bar", "硬盘", "disk"],
@@ -323,9 +333,9 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
   ]
 
   return (
-    <Card className="@container gap-0 overflow-hidden py-0">
+    <Card className="@container gap-0 overflow-hidden py-0 server-list">
       {/* Header: the transplanted stat bar alone, sized to the card. */}
-      <CardHeader className="border-b border-border/60 px-3 py-2.5 max-md:px-1 xl:hidden">
+      <CardHeader className="border-b border-border/60 px-3 py-2.5 max-md:px-1 md:hidden">
         <StatBar nodes={groupNodes} className="w-full" />
       </CardHeader>
 
@@ -379,7 +389,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
           )}
           </div>
           {/* Wide screens: the one-line stat bar fills the group bar's right side. */}
-          <StatBar nodes={groupNodes} variant="line" className="ml-auto max-xl:hidden" />
+          <StatBar nodes={groupNodes} variant="line" className="ml-auto max-md:hidden" />
         </div>
       )}
 
@@ -404,7 +414,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
           <TableBody className="[&_td]:px-2 [&_td]:py-1 @max-3xl:[&_td]:px-0.5 @max-sm:[&_td]:py-[6px]">
             {sortedNodes.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={12} className="py-12 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={13} className="py-12 text-center text-sm text-muted-foreground">
                   暂无服务器
                 </TableCell>
               </TableRow>

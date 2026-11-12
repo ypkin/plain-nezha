@@ -29,7 +29,7 @@ eq(bytes(100 * 1024), "100 KB", "三位数不留小数")
 eq(bytes(1024, 1), "1.0 KB", "digits 覆盖默认档位")
 
 // pair: one unit when both sides share it, two when they do not.
-eq(pair(300 * 1024 ** 2, 900 * 1024 ** 2), "300.00 / 900.00 MB", "同单位只写一次")
+eq(pair(300 * 1024 ** 2, 900 * 1024 ** 2), "300.000 / 900.000 MB", "同单位只写一次")
 eq(pair(300 * 1024 ** 2, 3 * 1024 ** 3), "300 MB / 3.00 GB", "跨单位各写各的")
 
 // axisBytes: ticks under three digits keep one decimal, or a narrow axis repeats
@@ -104,9 +104,9 @@ eq(uptime(2 * 86400 + 5 * 3600), "2d 5h", "超过一天不再写分钟")
 
 eq(compact(0), "0B", "compact(0)")
 eq(compact(626), "626B", "compact 在 B 档不带小数")
-eq(compact(1.5 * 1024), "1.5K", "compact 去掉末尾的 0")
+eq(compact(1.5 * 1024), "2K", "compact K 档四舍五入取整（网速列现行口径）")
 eq(compact(1024 ** 3), "1G", "整数不写小数")
-eq(compact(4.914 * 1024), "4.91K", "一位数留两位小数")
+eq(compact(4.914 * 1024), "5K", "compact K 档不留小数")
 eq(compact(512.4 * 1024 ** 2), "512M", "三位数不留小数")
 
 eq(distro("Debian GNU/Linux 13 (trixie)"), "Debian", "Debian 不带版本号")

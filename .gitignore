@@ -35,3 +35,6 @@ dist-ssr
 
 theme.tar.gz
 theme.tar.gz.sha256
+
+# 本地构建备份，不进仓库
+dist.bak-*/

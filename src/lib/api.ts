@@ -340,12 +340,13 @@ function ensureSnapshot(maxAgeMs: number, signal?: AbortSignal): Promise<Node[]>
   return snapshotFlight
 }
 
-/* ---------- streaming/AI unlock (IPQuality results, server-set) ----------
+/* ---------- streaming/AI unlock (server-set results) ----------
    The panel has no unlock field, so the results live on a small service
-   behind ``/unlock/`` (sailor, see unlock.py): GET / returns nodes keyed
-   by nezha node id, POST /test starts a background IPQuality run
-   (a few minutes; the frontend polls until checked_at changes).
-   Only sailor has data so far; other nodes render "暂无数据". */
+   behind ``/unlock/`` (sailor): GET / returns nodes keyed by nezha node
+   id, POST /test with {"node_id": id} re-tests that node (sailor runs
+   locally, reachable nodes are triggered by forwarding, push-only nodes
+   are queued for their next 5-minute poll; the frontend polls until
+   checked_at changes, up to 10 minutes). */
 
 export type UnlockService = {
   status: "unlocked" | "blocked" | "partial" | "unknown"
@@ -384,14 +385,15 @@ export async function fetchUnlock(id: number): Promise<UnlockNode | null> {
   } catch { /* server unreachable: keep whatever was cached */ }
   return unlockNodes[String(id)] ?? null
 }
-export async function requestUnlockTest(): Promise<"started" | "running" | "cooldown" | "failed"> {
+export async function requestUnlockTest(id: number): Promise<"started" | "running" | "cooldown" | "queued" | "failed"> {
   try {
-    const res = await fetch("/unlock/test", { method: "POST", signal: AbortSignal.timeout(10000) })
+    const res = await fetch("/unlock/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ node_id: String(id) }), signal: AbortSignal.timeout(10000) })
     if (res.status === 429) return "cooldown"
     if (!res.ok) return "failed"
     const data = await res.json() as { status?: unknown }
     if (data.status === "running") return "running"
     if (data.status === "started") return "started"
+    if (data.status === "queued") return "queued"
     return "failed"
   } catch { return "failed" }
 }

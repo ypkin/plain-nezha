@@ -22,14 +22,14 @@ export function bytes(n: number, digits?: number): string {
 
 /**
  * A "used / total" pair. Sharing a unit means writing it once, and those four
- * characters are what allow the two decimals: 111px against the 122px a card in
+ * characters are what allow the three decimals: 111px against the 122px a card in
  * the four-column grid provides, where separate units require 132px. A pair
  * spanning two units has nothing to save and falls back to bytes().
  */
 export function pair(used: number, total: number): string {
   if (used > 0 && total > 0 && unitOf(used) === unitOf(total)) {
     const i = unitOf(total)
-    const f = (n: number) => (n / 1024 ** i).toFixed(i === 0 ? 0 : 2)
+    const f = (n: number) => (n / 1024 ** i).toFixed(i === 0 ? 0 : 3)
     return `${f(used)} / ${f(total)} ${UNITS[i]}`
   }
   return `${bytes(used)} / ${bytes(total)}`

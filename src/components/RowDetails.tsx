@@ -101,7 +101,10 @@ function UnlockBadges({ ip }: { ip: UnlockIp }) {
             : s.status === "blocked"
               ? "border-red-500/50 text-red-600 dark:text-red-400"
               : "border-border text-muted-foreground"
-        const mark = s.status === "unlocked" ? "✓" : s.status === "partial" ? "△ 仅自制" : s.status === "blocked" ? "✗ 屏蔽" : "?"
+        // YouTube blocked means Premium isn't offered in that region: the
+        // check's "No" is exactly "Premium is not available in your
+        // country", so it reads 禁会员, not 屏蔽. Other services keep 屏蔽.
+        const mark = s.status === "unlocked" ? "✓" : s.status === "partial" ? "△ 仅自制" : s.status === "blocked" ? (key === "youtube" ? "✗ 禁会员" : "✗ 屏蔽") : "?"
         return (
           <span key={key} className={cn("min-w-0 justify-self-start whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] font-medium", color)}>
             {label} {mark}{s.region ? ` ${s.region}` : ""}
@@ -125,13 +128,15 @@ function maskIp(ip: string): string {
 }
 function UnlockIpGroup({ label, ip }: { label: string; ip: UnlockIp | undefined }) {
   if (!ip) return null
+  // Native shows its region too (registration == usage by definition);
+  // with no classification yet (old data), fall back to the usage region.
   const typeLabel = ip.status === "pending"
     ? ""
     : ip.ip_type === "broadcast"
       ? `广播 · 注册 ${ip.registration ?? "?"} / 使用 ${ip.usage ?? "?"}`
       : ip.ip_type === "native"
-        ? "原生"
-        : ""
+        ? `原生 · ${ip.usage ?? ip.registration ?? "?"}`
+        : (ip.usage ?? "")
   // A fragment, not a stacked block: UnlockBlock lays the two groups
   // out as two grid rows (label | badges), so the whole card is two
   // lines on desktop instead of label-above-badges times two.
@@ -151,6 +156,7 @@ function UnlockIpGroup({ label, ip }: { label: string; ip: UnlockIp | undefined 
 function UnlockBlock({ node }: { node: Node }) {
   const [data, setData] = useState<UnlockNode | null | undefined>(undefined)
   const [testing, setTesting] = useState(false)
+  const [queued, setQueued] = useState(false)
   const [testError, setTestError] = useState("")
   const [before, setBefore] = useState<string | undefined>(undefined)
   useEffect(() => {
@@ -167,8 +173,10 @@ function UnlockBlock({ node }: { node: Node }) {
       if (d && d.checked_at && d.checked_at !== before) {
         setData(d)
         setTesting(false)
-      } else if (Date.now() - started > 5 * 60 * 1000) {
+        setQueued(false)
+      } else if (Date.now() - started > 10 * 60 * 1000) {
         setTesting(false)
+        setQueued(false)
         setTestError("检测超时，请稍后刷新页面")
       }
     }, 15000)
@@ -177,7 +185,7 @@ function UnlockBlock({ node }: { node: Node }) {
   const runTest = async () => {
     setTestError("")
     setBefore(data?.checked_at)
-    const res = await requestUnlockTest()
+    const res = await requestUnlockTest(node.id)
     if (res === "failed") {
       setTestError("服务端未达，检测未启动")
       return
@@ -186,6 +194,7 @@ function UnlockBlock({ node }: { node: Node }) {
       setTestError("刚测过不久，稍后再试")
       return
     }
+    setQueued(res === "queued")
     setTesting(true)
   }
   const checked = data?.checked_at ? data.checked_at.slice(5, 10) : ""
@@ -197,7 +206,7 @@ function UnlockBlock({ node }: { node: Node }) {
         <div className="flex items-center gap-2">
           {checked && <span className="tnum text-[11px] font-normal text-muted-foreground">每周检测 · 上次 {checked}</span>}
           <button type="button" onClick={runTest} disabled={testing} className="rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground disabled:opacity-50">
-            {testing ? "检测中…" : "重新检测"}
+            {testing ? (queued ? "已排队，等节点轮询…" : "检测中…") : "重新检测"}
           </button>
         </div>
       }
@@ -239,7 +248,7 @@ function Overview({ node }: { node: Node }) {
   const todayLocal = `${nowD.getFullYear()}-${String(nowD.getMonth() + 1).padStart(2, "0")}-${String(nowD.getDate()).padStart(2, "0")}`
   const openCal = () => {
     setDraftDate(cal?.start ?? node.month_start)
-    setDraftAmt(cal ? String(Math.round((cal.offset / 1024 ** 3) * 100) / 100) : "")
+    setDraftAmt(cal ? (cal.offset / 1024 ** 3).toFixed(3) : "")
     setDraftUnit("GB")
     setDraftPassword("")
     setDraftNewPassword("")
@@ -292,7 +301,7 @@ function Overview({ node }: { node: Node }) {
   const limit = node.traffic_limit
   const since = periodStart(node.month_start)
   const usage = (used: number, total: number) => `${pair(used, total)}（${percent(used, total).toFixed(1)}%）`
-  const flow = (rx: number, tx: number) => `↓ ${bytes(rx)} · ↑ ${bytes(tx)}`
+  const flow = (rx: number, tx: number) => `↓ ${bytes(rx, 3)} · ↑ ${bytes(tx, 3)}`
   const metering = [
     node.traffic_reset_day > 0 && `每月 ${node.traffic_reset_day} 日重置`,
     limit > 0 && (TRAFFIC_MODES[node.traffic_mode] ?? node.traffic_mode),
@@ -345,6 +354,8 @@ function Overview({ node }: { node: Node }) {
         <Line label="交换">{node.swap_total > 0 ? (m ? usage(m.swap_used, m.swap_total) : bytes(node.swap_total)) : "未启用"}</Line>
         <Line label="硬盘">{m ? usage(m.disk_used, m.disk_total) : bytes(node.disk_total)}</Line>
         {m && <Line label="负载">{m.load.map((n) => n.toFixed(2)).join(" / ")}</Line>}
+        {m && <Line label="进程数">{m.procs}</Line>}
+        {m && <Line label="连接数">TCP {m.tcp} / UDP {m.udp}</Line>}
       </Block>
 
       <Block
@@ -362,9 +373,9 @@ function Overview({ node }: { node: Node }) {
           </div>
         }
       >
-        <Line label="本期">{limit > 0 ? usage(used, limit) : `${bytes(used)} / ${FOREVER}`}</Line>
+        <Line label="本期">{limit > 0 ? usage(used, limit) : `${bytes(used, 3)} / ${FOREVER}`}</Line>
         {limit > 0 && (
-          <PeriodMeter used={used} today={today} limit={limit} title={`本期已用 ${pair(used, limit)}，其中今日 ${bytes(today)}`} />
+          <PeriodMeter used={used} today={today} limit={limit} title={`本期已用 ${pair(used, limit)}，其中今日 ${bytes(today, 3)}`} />
         )}
         <Line label="今日">{flow(node.day_rx, node.day_tx)}</Line>
         <Line label="累计">{flow(node.total_rx, node.total_tx)}</Line>
@@ -378,7 +389,7 @@ function Overview({ node }: { node: Node }) {
             <label className="block text-[11px] text-muted-foreground">
               服务商当前已用（本期）
               <span className="mt-1 flex gap-1.5">
-                <input type="number" min="0" step="0.01" value={draftAmt} onChange={(e) => setDraftAmt(e.target.value)} placeholder="0" className="w-full min-w-0 rounded-md border border-border bg-background px-2 py-1 text-xs font-normal text-foreground" />
+                <input type="number" min="0" step="0.001" value={draftAmt} onChange={(e) => setDraftAmt(e.target.value)} placeholder="0" className="w-full min-w-0 rounded-md border border-border bg-background px-2 py-1 text-xs font-normal text-foreground" />
                 <select value={draftUnit} onChange={(e) => setDraftUnit(e.target.value as "MB" | "GB" | "TB")} className="shrink-0 rounded-md border border-border bg-background px-1.5 py-1 text-xs font-normal text-foreground">
                   <option value="MB">MB</option>
                   <option value="GB">GB</option>
@@ -429,9 +440,14 @@ function Overview({ node }: { node: Node }) {
 }
 
 function ServicesTab({ node }: { node: Node }) {
-  const list = nodeServices(node.name)
+  const staticList = nodeServices(node.name)
   const checkable = SERVICE_CHECK_IDS.has(node.id)
   const [live, setLive] = useState<ServicesNode | null | undefined>(undefined)
+  // 新业务自动上榜：节点实查上报为 running 的服务，即使静态表里没写也显示，
+  // 这样以后新装服务只要检测脚本认得它，点重新检测就会出现，不用再改前端发版。
+  const list = live?.services
+    ? [...staticList, ...Object.keys(live.services).filter((k) => live.services![k] === "running" && !staticList.includes(k))]
+    : staticList
   const [testing, setTesting] = useState(false)
   const [testError, setTestError] = useState("")
   const [before, setBefore] = useState<string | undefined>(undefined)

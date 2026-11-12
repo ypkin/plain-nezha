@@ -9,11 +9,14 @@
     { "type": "title", "label": "公告" },
     { "key": "notice", "type": "text", "label": "站点公告", "default": "", "help": "显示在首页顶部，纯文本展示，留空不显示" },
     { "type": "title", "label": "默认外观" },
-    { "key": "theme_preset", "type": "select", "label": "默认配色方案", "default": "claude", "options": [
-      { "value": "claude", "label": "Claude (暖陶)" },
-      { "value": "vercel", "label": "Vercel (极简黑白)" },
-      { "value": "twitter", "label": "Twitter (经典微蓝)" },
-      { "value": "default", "label": "shadcn/ui (原生岩灰)" }
+    { "key": "theme_preset", "type": "select", "label": "默认配色方案", "default": "tz-dusk", "options": [
+            { "value": "tz-ice", "label": "冰蓝" },
+            { "value": "tz-crimson", "label": "绯红" },
+            { "value": "tz-jade", "label": "翡翠" },
+            { "value": "tz-amber", "label": "琥珀" },
+            { "value": "tz-dusk", "label": "暮紫" },
+            { "value": "tz-neon", "label": "霓虹" },
+      { "value": "tz-carbon", "label": "碳黑" }
     ] },
     { "key": "grain_percent", "type": "number", "label": "默认噪点强度 (%)", "default": 16, "min": 0, "max": 100, "help": "Zen Browser 质感噪点颗粒强度（0-100%）" },
     { "key": "frosted_percent", "type": "number", "label": "默认磨砂透光度 (%)", "default": 20, "min": 0, "max": 100, "help": "卡片亚克力磨砂半透明度（0-100%）" }

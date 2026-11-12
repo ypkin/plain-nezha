@@ -37,7 +37,6 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
     if (!fastest || m.net_rx > fastest.rx) fastest = { name: node.name, rx: m.net_rx }
   }
   const offline = nodes.length - online
-  const sameNode = busiest && fastest && busiest.name === fastest.name
   if (variant === "line") {
     // One-line edition for the group bar on wide screens: same data and shine
     // colours as the stacked bar, laid out flat — count, rates and totals with
@@ -135,14 +134,14 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
       <div className="stat-divider mx-0.5 h-2 w-px shrink-0 md:hidden" aria-hidden="true" />
 
       <div className="flex shrink-0 items-center gap-1 whitespace-nowrap md:hidden" title="最忙节点：CPU 最高">
-        <span aria-hidden="true" className={cn(busiest && busiest.cpu > 15 && "animate-pulse", sameNode && "scale-50")}>🔥</span>
+        <span aria-hidden="true" className={cn(busiest && busiest.cpu > 15 && "animate-pulse")}>🔥</span>
         <span className="shine-busy inline-block w-[6ch] text-center">{busiest?.name ?? "-"}</span>
       </div>
 
       <div className="stat-divider mx-0.5 h-2 w-px shrink-0 md:hidden" aria-hidden="true" />
 
       <div className="flex shrink-0 items-center gap-1 whitespace-nowrap md:hidden" title="最快节点：下载最快">
-        <span aria-hidden="true" className={cn(fastest && fastest.rx > 1.5 * 1024 * 1024 && "animate-pulse", sameNode && "scale-50")}>⚡</span>
+        <span aria-hidden="true" className={cn(fastest && fastest.rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
         <span className="shine-fast inline-block w-[6ch] text-center">{fastest?.name ?? "-"}</span>
       </div>
     </div>

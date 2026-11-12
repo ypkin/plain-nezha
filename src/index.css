@@ -19,41 +19,40 @@
    Light mode: Soft parchment paper background with warm charcoal typography and terracotta accents.
    Dark mode: Deep roasted velvet espresso background with ivory text and glowing warm accents. */
 :root {
-  --background: oklch(0.9818 0.0054 95.0986);
-  --foreground: oklch(0.3438 0.0269 95.7226);
-  --card: oklch(0.9818 0.0054 95.0986);
-  --card-foreground: oklch(0.1908 0.0020 106.5859);
-  --popover: oklch(1.0000 0 0);
-  --popover-foreground: oklch(0.2671 0.0196 98.9390);
-  --primary: oklch(0.6171 0.1375 39.0427);
-  --primary-foreground: oklch(1.0000 0 0);
-  --secondary: oklch(0.9245 0.0138 92.9892);
-  --secondary-foreground: oklch(0.4334 0.0177 98.6048);
-  --muted: oklch(0.9341 0.0153 90.2390);
-  --muted-foreground: oklch(0.6059 0.0075 97.4233);
-  --accent: oklch(0.9245 0.0138 92.9892);
-  --accent-foreground: oklch(0.2671 0.0196 98.9390);
-  --destructive: oklch(0.1908 0.0020 106.5859);
-  --destructive-foreground: oklch(1.0000 0 0);
-  --border: oklch(0.8847 0.0069 97.3627);
-  --input: oklch(0.7621 0.0156 98.3528);
-  --ring: oklch(0.6171 0.1375 39.0427);
-  --chart-1: oklch(0.5583 0.1276 42.9956);
-  --chart-2: oklch(0.6898 0.1581 290.4107);
-  --chart-3: oklch(0.8816 0.0276 93.1280);
-  --chart-4: oklch(0.8822 0.0403 298.1792);
-  --chart-5: oklch(0.5608 0.1348 42.0584);
-  --sidebar: oklch(0.9663 0.0080 98.8792);
-  --sidebar-foreground: oklch(0.3590 0.0051 106.6524);
-  --sidebar-primary: oklch(0.6171 0.1375 39.0427);
-  --sidebar-primary-foreground: oklch(0.9881 0 0);
-  --sidebar-accent: oklch(0.9245 0.0138 92.9892);
-  --sidebar-accent-foreground: oklch(0.3250 0 0);
-  --sidebar-border: oklch(0.9401 0 0);
-  --sidebar-ring: oklch(0.7731 0 0);
+  --background: #F3EFF8;
+  --foreground: #1E1B26;
+  --card: #FFFFFF;
+  --card-foreground: #1E1B26;
+  --popover: #FFFFFF;
+  --popover-foreground: #1E1B26;
+  --primary: #0EA5E9;
+  --primary-foreground: #FFFFFF;
+  --secondary: #E0F2FE;
+  --secondary-foreground: #075985;
+  --muted: #EAE6F2;
+  --muted-foreground: #6B657A;
+  --accent: #E0F2FE;
+  --accent-foreground: #075985;
+  --destructive: #EF4037;
+  --destructive-foreground: #FFFFFF;
+  --border: #E6E0F0;
+  --input: #E6E0F0;
+  --ring: #0EA5E9;
+  --chart-1: #0EA5E9;
+  --chart-2: #0891B2;
+  --chart-3: #38BDF8;
+  --chart-4: #22D3EE;
+  --chart-5: #67E8F9;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1E1B26;
+  --sidebar-primary: #0EA5E9;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E0F2FE;
+  --sidebar-accent-foreground: #075985;
+  --sidebar-border: #E6E0F0;
+  --sidebar-ring: #0EA5E9;
 
   --radius: 0.5rem;
-
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
@@ -65,38 +64,38 @@
 }
 
 .dark {
-  --background: oklch(0.2679 0.0036 106.6427);
-  --foreground: oklch(0.8074 0.0142 93.0137);
-  --card: oklch(0.2679 0.0036 106.6427);
-  --card-foreground: oklch(0.9818 0.0054 95.0986);
-  --popover: oklch(0.3085 0.0035 106.6039);
-  --popover-foreground: oklch(0.9211 0.0040 106.4781);
-  --primary: oklch(0.6724 0.1308 38.7559);
-  --primary-foreground: oklch(1.0000 0 0);
-  --secondary: oklch(0.32 0.006 106.6);
-  --secondary-foreground: oklch(0.85 0.012 93.0);
-  --muted: oklch(0.2213 0.0038 106.7070);
-  --muted-foreground: oklch(0.7713 0.0169 99.0657);
-  --accent: oklch(0.2130 0.0078 95.4245);
-  --accent-foreground: oklch(0.9663 0.0080 98.8792);
-  --destructive: oklch(0.6368 0.2078 25.3313);
-  --destructive-foreground: oklch(1.0000 0 0);
-  --border: oklch(0.3618 0.0101 106.8928);
-  --input: oklch(0.4336 0.0113 100.2195);
-  --ring: oklch(0.6724 0.1308 38.7559);
-  --chart-1: oklch(0.5583 0.1276 42.9956);
-  --chart-2: oklch(0.6898 0.1581 290.4107);
-  --chart-3: oklch(0.2130 0.0078 95.4245);
-  --chart-4: oklch(0.3074 0.0516 289.3230);
-  --chart-5: oklch(0.5608 0.1348 42.0584);
-  --sidebar: oklch(0.2357 0.0024 67.7077);
-  --sidebar-foreground: oklch(0.8074 0.0142 93.0137);
-  --sidebar-primary: oklch(0.3250 0 0);
-  --sidebar-primary-foreground: oklch(0.9881 0 0);
-  --sidebar-accent: oklch(0.1680 0.0020 106.6177);
-  --sidebar-accent-foreground: oklch(0.8074 0.0142 93.0137);
-  --sidebar-border: oklch(0.9401 0 0);
-  --sidebar-ring: oklch(0.7731 0 0);
+  --background: #120E1A;
+  --foreground: #F5F3FF;
+  --card: #241A30;
+  --card-foreground: #F5F3FF;
+  --popover: #1E1628;
+  --popover-foreground: #F5F3FF;
+  --primary: #A78BFA;
+  --primary-foreground: #120E1A;
+  --secondary: #2E2140;
+  --secondary-foreground: #DDD6FE;
+  --muted: #1E1628;
+  --muted-foreground: #A79FBC;
+  --accent: #2E2140;
+  --accent-foreground: #DDD6FE;
+  --destructive: #EF4037;
+  --destructive-foreground: #FFFFFF;
+  --border: #3B2D52;
+  --input: #3B2D52;
+  --ring: #A78BFA;
+  --chart-1: #A78BFA;
+  --chart-2: #8B5CF6;
+  --chart-3: #22D3EE;
+  --chart-4: #C4B5FD;
+  --chart-5: #F0ABFC;
+  --sidebar: #241A30;
+  --sidebar-foreground: #F5F3FF;
+  --sidebar-primary: #A78BFA;
+  --sidebar-primary-foreground: #120E1A;
+  --sidebar-accent: #2E2140;
+  --sidebar-accent-foreground: #DDD6FE;
+  --sidebar-border: #3B2D52;
+  --sidebar-ring: #A78BFA;
 }
 
 @theme inline {
@@ -200,3 +199,91 @@ html:not(.dark) .stat-bar span {
   animation: statDividerFlow 3s linear infinite;
 }
 @keyframes statDividerFlow { to { background-position: 0 -300%; } }
+
+/* tz 系列主题质感：仅当 data-theme-preset 以 tz- 开头时生效，其余主题
+   不命中选择器，视觉上与改动前完全一致。*/
+html[data-theme-preset^="tz-"] body {
+  background-image:
+    repeating-linear-gradient(115deg, color-mix(in srgb, var(--tz-line) 5%, transparent) 0 1px, transparent 1px 140px),
+    linear-gradient(180deg, var(--background), var(--tz-bg2));
+}
+html[data-theme-preset^="tz-"] header.sticky {
+  background-color: var(--card);
+  box-shadow: 0 1px 0 var(--tz-line), 0 0 28px var(--tz-glow);
+}
+html[data-theme-preset^="tz-"] .bg-card.rounded-lg,
+html[data-theme-preset^="tz-"] .server-list {
+  box-shadow: inset 0 1px 0 var(--tz-line), 0 0 28px var(--tz-glow);
+}
+/* Progress bars follow the theme line colour (normal state only; the
+   amber/red danger fills are separate classes and keep their meaning).
+   Placed before neon's gradient so neon keeps its cyan-to-mint fill. */
+html[data-theme-preset^="tz-"] div.relative.h-full.bg-emerald-500 {
+  background-color: var(--tz-line);
+}
+/* 霓虹专属：收起的表格里青色几乎没有落点（用量条是语义绿、速率是暗色、辉光只在展开的详情卡上），
+   所以霓虹看着不霓虹。只给 tz-neon 加三处可见载体，不动布局、不动危险色（≥80 琥珀、≥90 红保留）： */
+html[data-theme-preset="tz-neon"] div.relative.h-full.bg-emerald-500 {
+  background-color: transparent;
+  background-image: linear-gradient(90deg, #22D3EE, #34D399);
+}
+/* Network figures: left = status green, right = bar = theme line colour.
+   Left is the status green for every theme (neon's mint); jade's right is
+   already mint, so jade's left steps to teal to stay a second colour.
+   Carbon stays monochrome. */
+html[data-theme-preset^="tz-"] div.text-muted-foreground > span.tnum:first-of-type { color: #34D399; }
+html[data-theme-preset^="tz-"] div.text-muted-foreground > span.tnum:last-of-type { color: var(--tz-line); }
+html[data-theme-preset="tz-jade"] div.text-muted-foreground > span.tnum:first-of-type { color: #2DD4BF; }
+html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum:first-of-type,
+html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum:last-of-type { color: var(--muted-foreground); }
+/* Carbon on PC only: dim the progress bars a notch -- tz-line is near-white
+   and glares on the pure-black card. Mobile keeps the brighter fill. */
+@media (min-width: 1024px) {
+  html[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
+    background-color: #A3A3A3;
+  }
+}
+html[data-theme-preset="tz-neon"] .bg-card.rounded-lg,
+html[data-theme-preset="tz-neon"] .server-list {
+  box-shadow: inset 0 1px 0 var(--tz-line), 0 0 36px rgba(34, 211, 238, 0.5);
+}
+html[data-theme-preset="tz-neon"] header.sticky {
+  box-shadow: 0 1px 0 var(--tz-line), 0 0 36px rgba(34, 211, 238, 0.5);
+}
+/* 碳黑专属：辉光改成极光色 -- 统计栏极光分隔线的绿青紫三色分层晕开，
+   不再是单色白光；且像真极光一样随时间流转变色，青紫绿三色轮着占主导。
+   只覆盖 tz-carbon，不动其他主题。
+   变幻要看得清：三色不能同时以相近强度存在（会混成一团恒色），
+   每段只让一色占主导（0.55），其余两色压到 0.10/0.08，青→紫→绿轮换才分明。 */
+@keyframes carbonAuroraCard {
+  0%, 100% { box-shadow: inset 0 1px 0 var(--tz-line), 0 0 28px rgba(34, 211, 238, 0.55), 0 0 56px rgba(167, 139, 250, 0.10), 0 0 84px rgba(74, 222, 128, 0.08); }
+  33% { box-shadow: inset 0 1px 0 var(--tz-line), 0 0 28px rgba(167, 139, 250, 0.55), 0 0 56px rgba(74, 222, 128, 0.10), 0 0 84px rgba(34, 211, 238, 0.08); }
+  66% { box-shadow: inset 0 1px 0 var(--tz-line), 0 0 28px rgba(74, 222, 128, 0.55), 0 0 56px rgba(34, 211, 238, 0.10), 0 0 84px rgba(167, 139, 250, 0.08); }
+}
+@keyframes carbonAuroraHeader {
+  0%, 100% { box-shadow: 0 1px 0 var(--tz-line), 0 0 28px rgba(34, 211, 238, 0.55), 0 0 56px rgba(167, 139, 250, 0.10), 0 0 84px rgba(74, 222, 128, 0.08); }
+  33% { box-shadow: 0 1px 0 var(--tz-line), 0 0 28px rgba(167, 139, 250, 0.55), 0 0 56px rgba(74, 222, 128, 0.10), 0 0 84px rgba(34, 211, 238, 0.08); }
+  66% { box-shadow: 0 1px 0 var(--tz-line), 0 0 28px rgba(74, 222, 128, 0.55), 0 0 56px rgba(34, 211, 238, 0.10), 0 0 84px rgba(167, 139, 250, 0.08); }
+}
+html[data-theme-preset="tz-carbon"] .bg-card.rounded-lg,
+html[data-theme-preset="tz-carbon"] .server-list {
+  box-shadow: inset 0 1px 0 var(--tz-line), 0 0 28px rgba(34, 211, 238, 0.55), 0 0 56px rgba(167, 139, 250, 0.10), 0 0 84px rgba(74, 222, 128, 0.08);
+  animation: carbonAuroraCard 12s ease-in-out infinite;
+}
+html[data-theme-preset="tz-carbon"] header.sticky {
+  box-shadow: 0 1px 0 var(--tz-line), 0 0 28px rgba(34, 211, 238, 0.55), 0 0 56px rgba(167, 139, 250, 0.10), 0 0 84px rgba(74, 222, 128, 0.08);
+  animation: carbonAuroraHeader 12s ease-in-out infinite;
+}
+/* Probe tag on-state, toned down from the Toggle's full primary fill:
+   primary mixed 30% toward black, so four in a row don't glare, and flat
+   (no raised shadow) -- the on-state is the fill, not the depth.
+   At this depth the dark primary-foreground text no longer reads, so the
+   tag text goes white. A switched-off tag stays dashed and faint. */
+.probe-tag-on {
+  background-color: color-mix(in srgb, var(--primary) 30%, black);
+  border-color: color-mix(in srgb, var(--primary) 30%, black);
+}
+.probe-tag-on:hover {
+  background-color: color-mix(in srgb, var(--primary) 40%, black);
+  border-color: color-mix(in srgb, var(--primary) 40%, black);
+}

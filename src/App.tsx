@@ -94,10 +94,10 @@ const MODES = [
 function useThemePreset(dark: boolean) {
   const [themeId, setThemeId] = useState<string>(() => {
     const saved = localStorage.getItem("theme-preset")
-    return THEMES.some((t) => t.id === saved) ? saved! : "claude"
+    return THEMES.some((t) => t.id === saved) ? saved! : "tz-dusk"
   })
 
-  const activeTheme = useMemo(() => THEMES.find((t) => t.id === themeId) ?? THEMES[0], [themeId])
+  const activeTheme = useMemo(() => THEMES.find((t) => t.id === themeId) ?? THEMES.find((t) => t.id === "tz-dusk") ?? THEMES[0], [themeId])
 
   useEffect(() => {
     const vars = dark ? activeTheme.dark : activeTheme.light
@@ -105,6 +105,7 @@ function useThemePreset(dark: boolean) {
     for (const [key, val] of Object.entries(vars)) {
       root.style.setProperty(`--${key}`, String(val))
     }
+    root.dataset.themePreset = themeId
     localStorage.setItem("theme-preset", themeId)
   }, [activeTheme, dark, themeId])
 
@@ -238,7 +239,7 @@ function ThemeSettingsControl({
               <span className="text-xs font-semibold">主题配色 (tweakcn)</span>
               <span className="text-[10px] text-muted-foreground">实时换肤</span>
             </div>
-            <div className="mt-2 grid grid-cols-2 gap-1.5">
+            <div className="mt-2 grid grid-cols-3 gap-1.5">
               {THEMES.map((t) => {
                 const active = themeId === t.id
                 return (
@@ -373,7 +374,7 @@ function NavTab({ href, active, icon: Icon, children }: { href: string; active: 
 }
 
 // Unified layout measure across header, main, and footer: 1280px (max-w-7xl)
-const CONTAINER_CLASS = "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8"
+const CONTAINER_CLASS = "mx-auto w-full max-w-7xl px-2 sm:px-6 lg:px-8"
 
 export default function App() {
   const { mode, dark, choose } = useTheme()
@@ -449,7 +450,7 @@ export default function App() {
   if (!me.public_page && !me.authed) return null
 
   return (
-    <div className="relative flex min-h-svh flex-col bg-background">
+    <div className="relative flex min-h-svh flex-col">
       {/* Zen Browser-style tactile grain overlay */}
       {grainPercent > 0 && (
         <div
@@ -462,11 +463,11 @@ export default function App() {
       )}
 
       {/* Standard full-width sticky navigation bar aligned with page measure */}
-      <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background">
+      <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background dark:bg-[#1e092a]">
         <div className={cn(CONTAINER_CLASS, "flex h-14 items-center justify-between gap-4")}>
           <div className="flex items-center gap-6 max-sm:gap-3">
             <Link href="/" className="flex min-w-0 items-center gap-2.5 font-semibold tracking-tight text-foreground transition-colors hover:opacity-90">
-              <img src="/favicon.png" alt="" className="size-5 shrink-0" />
+              <img src="/favicon-light.png" alt="" className="size-5 shrink-0" />
               <span className="truncate text-base font-bold">{site}</span>
             </Link>
             <nav aria-label="页面" className={cn(SEGMENT.list, "shrink-0")}>
@@ -507,7 +508,7 @@ export default function App() {
       </header>
 
       {/* Main body with unified container width */}
-      <main className={cn(CONTAINER_CLASS, "relative flex-1 space-y-6 py-6 max-md:py-4")}>
+      <main className={cn(CONTAINER_CLASS, "relative flex-1 space-y-6 pt-2 pb-6 max-md:pt-1.5 max-md:pb-4")}>
         {notice ? (
           <div className="flex items-start gap-2.5 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-foreground">
             <span className="font-semibold text-primary shrink-0">公告</span>

@@ -118,14 +118,21 @@ export function barTone(pct: number): string {
  * it. `children` are drawn over the fill, positioned against it.
  */
 export function Meter({
-  pct, className, title, children,
-}: { pct: number | null; className?: string; title?: string; children?: ReactNode }) {
+  pct, className, title, children, floor = 0,
+}: { pct: number | null; className?: string; title?: string; children?: ReactNode; floor?: number }) {
   const v = pct === null ? 0 : Math.min(100, Math.max(0, pct))
+  // A fill narrower than the track height reads as a stray dot, not a bar
+  // (on a phone-width bar, anything under ~5% is 2px or less). Callers that
+  // show the figure beside the meter can set floor to skip those specks;
+  // the figure itself still carries the exact value.
+  const showFill = v >= floor
   return (
     <div title={title} className={cn("h-1.5 w-full overflow-hidden rounded-full bg-primary/10", className)}>
-      <div className={cn("relative h-full rounded-full transition-[width] duration-500", barTone(v))} style={{ width: `${v}%` }}>
-        {children}
-      </div>
+      {showFill && (
+        <div className={cn("relative h-full rounded-full transition-[width] duration-500", barTone(v))} style={{ width: `${v}%` }}>
+          {children}
+        </div>
+      )}
     </div>
   )
 }

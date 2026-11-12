@@ -332,7 +332,7 @@ export function Latency({
           />
         )}
         {has && (
-          <div className="flex flex-wrap items-center gap-1.5 max-md:order-3 max-md:w-full max-md:flex-nowrap max-md:gap-1 md:ml-auto md:gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 max-md:order-3 max-md:w-full max-md:flex-nowrap max-md:gap-2 max-md:py-1 md:ml-auto md:gap-2">
             {pingSeries.map((s) => {
               const shown = !hiddenProbes.includes(s.id)
               return (
@@ -344,20 +344,20 @@ export function Latency({
                   }
                   aria-pressed={shown}
                   className={cn(
-                    "inline-flex h-5 items-center gap-1.5 rounded-md border px-2 text-xs font-medium transition-all hover:bg-muted max-md:min-w-0 max-md:flex-1 max-md:justify-center max-md:gap-1 max-md:px-1.5 md:px-1.5 md:text-[11px]",
-                    !shown ? "border-dashed border-border/60 opacity-40" : "border-border/80 bg-card",
+                    "inline-flex h-5 items-center gap-1.5 rounded-md border px-2 text-xs font-medium whitespace-nowrap transition-all hover:bg-muted max-md:min-w-0 max-md:flex-1 max-md:justify-center max-md:gap-1 max-md:px-0.5 max-md:text-[10px] max-md:font-semibold md:px-1.5 md:text-[11px]",
+                    !shown ? "border-dashed border-border/60 opacity-40" : "probe-tag-on text-white",
                   )}
                 >
                   {/* The swatch carries the same colour as the line. */}
-                  <svg width="14" height="6" className="shrink-0" aria-hidden>
+                  <svg width="14" height="6" className="shrink-0 max-md:w-2.5" aria-hidden>
                     <line x1="0" y1="3" x2="14" y2="3" stroke={color(s.id)} strokeWidth="2" />
                   </svg>
                   {s.name}
                   {/* Always shown, since the line is only what answered and a probe
                       dropping half its packets draws like a healthy one. Anything
                       under a tenth is written as such rather than rounded to 0.0.
-                      On phones the loss figure is hidden so all probes fit one row. */}
-                  <span className="tnum font-normal text-muted-foreground max-md:hidden">
+                      Shown on phones too: the rate is the point of the tag. */}
+                  <span className={cn("tnum font-normal", shown ? "text-white" : "text-muted-foreground")}>
                     {s.loss > 0 && s.loss < 0.1 ? "<0.1" : s.loss.toFixed(1)}%
                   </span>
                 </button>
