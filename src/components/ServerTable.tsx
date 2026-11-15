@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react"
 
-import { Dot, Flag, Meter, Num, OsIcon, SLOT } from "@/components/NodeMarks"
+import { Dot, Flag, Meter, OsIcon } from "@/components/NodeMarks"
 import { RowDetails } from "@/components/RowDetails"
 import { StatBar } from "@/components/StatBar"
 import { Badge } from "@/components/ui/badge"
@@ -18,11 +18,13 @@ import { cn } from "@/lib/utils"
 function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const v = pct === null ? 0 : Math.min(100, Math.max(0, pct))
   return (
-    <div className="flex flex-col items-center gap-0.5 min-w-0">
+    /* 进度条和数据一般宽（2026-11-15 用户点名）：单元按数字宽度收缩，
+       条 w-full 跟数字同宽、两边齐；min-w 防 0.0% 这类短数字把条压成点 */
+    <div className="mx-auto flex w-fit min-w-[5.5ch] flex-col items-stretch gap-0.5">
       <span className="tnum truncate text-center text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px]">
         {label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)}
       </span>
-      <Meter pct={pct} floor={5} className="h-1 w-2/3 @max-sm:h-[2px]" />
+      <Meter pct={pct} floor={5} className="h-1 w-full @max-sm:h-[2px]" />
     </div>
   )
 }
@@ -191,21 +193,23 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
         <TableCell className={cn(COL.load, "tnum text-muted-foreground")}>{m ? m.load[0].toFixed(2) : "—"}</TableCell>
         <TableCell className={COL.speed}>
           {m ? (
-            <div className="inline-flex items-center justify-center gap-1 whitespace-nowrap text-xs @max-3xl:text-[9px] @max-3xl:leading-none @max-sm:text-[11px] @max-sm:gap-0.5 text-muted-foreground">
-              {/* 移动端竖线对齐：两边各留 5ch 固定槽（compact 最宽约 5.1ch，5ch 槽刚好塞进 21% 列宽），竖线位置不再随数字长短跑 */}
-              <Num ch={SLOT.compact} className="@max-3xl:min-w-[5ch]">{compact(m.net_tx)}</Num>
-              <span className="text-muted-foreground/60">|</span>
-              <Num ch={SLOT.compact} className="@max-3xl:min-w-[5ch] text-left">{compact(m.net_rx)}</Num>
+            <div className="inline-grid grid-cols-[3.5rem_auto_3.5rem] @max-3xl:grid-cols-[2.25rem_auto_2.25rem] items-center justify-center gap-1 whitespace-nowrap text-xs @max-3xl:text-[9px] @max-3xl:leading-none @max-sm:text-[11px] @max-sm:gap-0.5 text-muted-foreground">
+              {/* 竖线对齐改定宽网格（2026-11-15）：旧 Num 槽是 min-width+ch 单位，
+                  内容超槽就被撑大、位置随数字长短跑；定宽列锁死两边与竖线 */}
+              <span className="tnum text-right">{compact(m.net_tx)}</span>
+              <span className="text-center text-muted-foreground/60">|</span>
+              <span className="tnum text-left">{compact(m.net_rx)}</span>
             </div>
           ) : (
             <span className="text-muted-foreground text-xs @max-3xl:text-[9px] @max-sm:text-[11px]">— | —</span>
           )}
         </TableCell>
         <TableCell className={COL.traffic}>
-          <div className="inline-flex items-center justify-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
-            <Num ch={SLOT.compact} className="@max-3xl:min-w-0">{compact(node.total_tx)}</Num>
-            <span className="text-muted-foreground/60">|</span>
-            <Num ch={SLOT.compact} className="@max-3xl:min-w-0 text-left">{compact(node.total_rx)}</Num>
+          <div className="inline-grid grid-cols-[3.5rem_auto_3.5rem] @max-3xl:grid-cols-[2.25rem_auto_2.25rem] items-center justify-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
+            {/* 同网速列的定宽网格：旧写法在 ≤3xl 时槽位 min-w-0 直接塌成内容宽，竖线必跑 */}
+            <span className="tnum text-right">{compact(node.total_tx)}</span>
+            <span className="text-center text-muted-foreground/60">|</span>
+            <span className="tnum text-left">{compact(node.total_rx)}</span>
           </div>
         </TableCell>
         <TableCell className={COL.bar}><Bar pct={m ? m.cpu : null} /></TableCell>
