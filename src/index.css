@@ -304,10 +304,8 @@ html[data-theme-preset="tz-carbon"] header.sticky {
    tz 另补一层落地影并保留自家辉光（霓虹/碳黑有独立阴影与动画体系，不覆盖）；
    表头：自成一个更亮的层，底边压线；行：每行顶边一道微光，像叠起来的薄板。 */
 .server-list {
-  background-color: color-mix(in srgb, var(--card) 58%, transparent);
+  background-color: var(--card);
   background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.05) 28%, rgba(0, 0, 0, 0.26) 68%, rgba(0, 0, 0, 0.48));
-  -webkit-backdrop-filter: blur(18px) saturate(1.5);
-  backdrop-filter: blur(18px) saturate(1.5);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 24px 48px -24px rgba(0, 0, 0, 0.6), 0 4px 14px -6px rgba(0, 0, 0, 0.45);
 }
 html[data-theme-preset^="tz-"]:not([data-theme-preset="tz-neon"]):not([data-theme-preset="tz-carbon"]) .server-list {
@@ -318,9 +316,10 @@ html[data-theme-preset^="tz-"]:not([data-theme-preset="tz-neon"]):not([data-them
   background-color: transparent;
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.10);
 }
-/* 整体渐变（2026-11-15 用户点名要）：整卡只有一道渐变——保留玻璃的
-   半透明与背景模糊，渐变从统计头一气贯到最后一行；内部各区不再自带
-   底色（统计头/分组栏/表头/行全部透明），只留发丝分隔线。 */
+/* 整体渐变（2026-11-15 用户点名要）：整卡只有一道渐变，从统计头一气
+   贯到最后一行；内部各区不再自带底色（统计头/分组栏/表头/行全部透
+   明），只留发丝分隔线。毛玻璃（半透明+背景模糊）同日晚间已按用户令去掉，
+   卡片回到实色底。 */
 .server-list tbody tr[aria-expanded] > td {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
