@@ -99,6 +99,9 @@
 }
 
 @theme inline {
+  /* Mac 式高清文字（2026-11-15 用户点名要）：苹果设备走原生 SF/苹方，
+     其他平台走自带 Inter（最接近 SF 的字形），中文回落苹方/Noto/雅黑。 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Segoe UI", Roboto, "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -155,6 +158,7 @@
      the theme rather than the OS: a light scrollbar on the dark page glows. */
   html.dark { color-scheme: dark; }
   body { @apply bg-background text-foreground antialiased; }
+  html { text-rendering: optimizeLegibility; font-optical-sizing: auto; }
 }
 
 /* Tabular figures keep live numbers from shifting as they update. */
