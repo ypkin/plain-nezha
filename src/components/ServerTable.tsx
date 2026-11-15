@@ -19,7 +19,7 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const v = pct === null ? 0 : Math.min(100, Math.max(0, pct))
   return (
     <div className="flex flex-col items-center gap-0.5 min-w-0">
-      <span className="tnum truncate text-center text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px] @max-sm:italic">
+      <span className="tnum truncate text-center text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px]">
         {label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)}
       </span>
       <Meter pct={pct} floor={5} className="h-1 w-2/3 @max-sm:h-[2px]" />
@@ -214,7 +214,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
         <TableCell className={cn(COL.price, "tnum text-muted-foreground")}>
           {node.price > 0 ? `${money(node.price, node.currency)} / ${CYCLES[node.billing_cycle] ?? node.billing_cycle}` : "Free"}
         </TableCell>
-        <TableCell className={cn(COL.expiry, "tnum text-muted-foreground @max-sm:italic")}><Expiry node={node} /></TableCell>
+        <TableCell className={cn(COL.expiry, "tnum text-muted-foreground")}><Expiry node={node} /></TableCell>
       </TableRow>
       {open && (
         <TableRow className="border-b bg-muted/25 hover:bg-muted/25">
