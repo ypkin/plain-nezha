@@ -22,7 +22,7 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
       <span className="tnum truncate text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px]">
         {label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)}
       </span>
-      <Meter pct={pct} floor={5} className="@max-sm:h-[3px]" />
+      <Meter pct={pct} floor={5} className="h-1 w-2/3 @max-sm:h-[2px]" />
     </div>
   )
 }
