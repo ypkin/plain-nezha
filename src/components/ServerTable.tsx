@@ -168,7 +168,7 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
         <TableCell className={cn(COL.name, "text-left font-medium")} title={node.name}>
           <div className="flex items-center gap-1.5 min-w-0">
             <ChevronRight className={cn("size-3.5 shrink-0 text-muted-foreground/50 transition-transform duration-200 @max-sm:hidden", open && "rotate-90 text-foreground")} />
-            <span className="hidden shrink-0 @max-sm:inline-flex">
+            <span className="hidden shrink-0 @max-sm:inline-flex @max-sm:ml-2">
               <Flag code={node.country} showCode={false} className="[&_img]:h-3 [&_img]:w-3 [&_img]:rounded-full" />
             </span>
             <span
