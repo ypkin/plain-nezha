@@ -193,7 +193,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
         <TableCell className={cn(COL.load, "tnum text-muted-foreground")}>{m ? m.load[0].toFixed(2) : "—"}</TableCell>
         <TableCell className={COL.speed}>
           {m ? (
-            <div className="inline-grid grid-cols-[3.5rem_auto_3.5rem] @max-3xl:grid-cols-[2.25rem_auto_2.25rem] items-center justify-center gap-1 whitespace-nowrap text-xs @max-3xl:text-[9px] @max-3xl:leading-none @max-sm:text-[11px] @max-sm:gap-0.5 text-muted-foreground">
+            <div className="grid grid-cols-[3.125rem_auto_3.125rem] @max-3xl:grid-cols-[2.25rem_auto_2.25rem] items-center justify-center gap-1 whitespace-nowrap text-xs @max-3xl:text-[9px] @max-3xl:leading-none @max-sm:text-[11px] @max-sm:gap-0.5 text-muted-foreground">
               {/* 竖线对齐改定宽网格（2026-11-15）：旧 Num 槽是 min-width+ch 单位，
                   内容超槽就被撑大、位置随数字长短跑；定宽列锁死两边与竖线 */}
               <span className="tnum text-right">{compact(m.net_tx)}</span>
@@ -205,7 +205,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
           )}
         </TableCell>
         <TableCell className={COL.traffic}>
-          <div className="inline-grid grid-cols-[3.5rem_auto_3.5rem] @max-3xl:grid-cols-[2.25rem_auto_2.25rem] items-center justify-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
+          <div className="grid grid-cols-[3.125rem_auto_3.125rem] @max-3xl:grid-cols-[2.25rem_auto_2.25rem] items-center justify-center gap-1 whitespace-nowrap text-xs text-muted-foreground">
             {/* 同网速列的定宽网格：旧写法在 ≤3xl 时槽位 min-w-0 直接塌成内容宽，竖线必跑 */}
             <span className="tnum text-right">{compact(node.total_tx)}</span>
             <span className="text-center text-muted-foreground/60">|</span>
