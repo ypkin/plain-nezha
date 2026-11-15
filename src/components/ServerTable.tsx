@@ -161,7 +161,7 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
                 )}
               </span>
             ) : (
-              <span className={cn("size-2 rounded-full", node.online ? "bg-green-500" : "bg-muted-foreground/40")} />
+              <span className={cn("size-2 rounded-full", node.online ? "bg-green-500 animate-breathe" : "bg-muted-foreground/40")} />
             )}
           </div>
         </TableCell>

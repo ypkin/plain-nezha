@@ -46,7 +46,7 @@ export function Dot({ node, className }: { node: Node; className?: string }) {
       {isOnline ? (
         <>
           <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-50 animate-ping" />
-          <span className="relative size-full rounded-full bg-emerald-500" />
+          <span className="relative size-full rounded-full bg-emerald-500 animate-breathe" />
         </>
       ) : (
         <span

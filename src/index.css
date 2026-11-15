@@ -200,6 +200,13 @@ html:not(.dark) .stat-bar span {
 }
 @keyframes statDividerFlow { to { background-position: 0 -300%; } }
 
+/* 状态点呼吸：在线圆点缓慢缩放+透明度起伏，离线不加。 */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.65; }
+}
+.animate-breathe { animation: breathe 2.4s ease-in-out infinite; }
+
 /* tz 系列主题质感：仅当 data-theme-preset 以 tz- 开头时生效，其余主题
    不命中选择器，视觉上与改动前完全一致。*/
 html[data-theme-preset^="tz-"] body {
