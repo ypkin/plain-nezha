@@ -47,17 +47,17 @@ function Expiry({ node }: { node: Node }) {
  * @max-sm overrides for narrow/mobile are untouched.
  */
 const COL = {
-  status: "w-[4%] text-center @max-3xl:w-[6%] @max-sm:py-0.5 py-1",
-  name: "min-w-28 max-w-56 truncate text-left font-medium w-[8%] @max-3xl:w-[19%] @max-3xl:max-w-none @max-3xl:min-w-0 @max-sm:w-[22%] @max-sm:py-0.5 py-1",
+  status: "w-[3%] text-center @max-3xl:w-[6%] @max-sm:py-0.5 py-1",
+  name: "min-w-28 max-w-56 truncate text-left font-medium w-[11%] @max-3xl:w-[19%] @max-3xl:max-w-none @max-3xl:min-w-0 @max-sm:w-[22%] @max-sm:py-0.5 py-1",
   location: "w-[5%] text-center @max-3xl:w-[7%] @max-sm:hidden py-1",
-  os: "w-[10%] text-left @max-5xl:hidden py-1",
+  os: "w-[8%] text-left @max-5xl:hidden py-1",
   uptime: "w-[6%] text-left @max-3xl:hidden py-1",
-  expiry: "w-[6%] text-left @max-3xl:text-center @max-3xl:w-[18%] @max-sm:w-[12%] @max-3xl:min-w-0 overflow-hidden @max-sm:py-0.5 py-1",
+  expiry: "w-[7%] text-left @max-3xl:text-center @max-3xl:w-[18%] @max-sm:w-[12%] @max-3xl:min-w-0 overflow-hidden @max-sm:py-0.5 py-1",
   load: "w-[4%] text-center @max-3xl:hidden py-1",
-  speed: "min-w-28 text-center w-[8%] @max-3xl:w-[19%] @max-3xl:min-w-0 @max-sm:w-[21%] overflow-hidden @max-sm:py-0.5 py-1",
-  traffic: "min-w-28 text-center w-[8%] @max-3xl:hidden py-1",
-  bar: "w-[8%] min-w-16 text-center @max-3xl:w-[10%] @max-3xl:min-w-0 @max-sm:w-[13%] overflow-hidden @max-sm:py-0.5 py-1",
-  price: "w-[7%] min-w-22 text-left @max-3xl:hidden py-1",
+  speed: "min-w-28 text-center w-[10%] @max-3xl:w-[19%] @max-3xl:min-w-0 @max-sm:w-[21%] overflow-hidden @max-sm:py-0.5 py-1",
+  traffic: "min-w-28 text-center w-[10%] @max-3xl:hidden py-1",
+  bar: "w-[6%] min-w-16 text-center @max-3xl:w-[10%] @max-3xl:min-w-0 @max-sm:w-[13%] overflow-hidden @max-sm:py-0.5 py-1",
+  price: "w-[8%] min-w-22 text-left @max-3xl:hidden py-1",
 }
 
 type SortField = "name" | "uptime" | "load" | "speed" | "cpu" | "mem" | "disk" | "price"
