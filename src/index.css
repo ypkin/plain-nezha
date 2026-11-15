@@ -311,13 +311,20 @@ html[data-theme-preset^="tz-"]:not([data-theme-preset="tz-neon"]):not([data-them
   background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.14));
   box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--foreground) 12%, transparent);
 }
-/* 明暗渐变质感（2026-11-15 用户点名要，第二版：交替行渐变）：
-   奇偶行两套深浅不同的渐变交替铺，明暗成节奏；alt 由 Row 按行号打类，
-   不用 nth-child，展开详情行也不会错位。 */
+/* 明暗渐变质感（2026-11-15 用户点名要，第三版：横向主题色渐变）：
+   每行从左侧的状态/名称区带着主题色晕染，横向渐隐到右侧的深色；
+   偶数行同款但整体压深一档，保留一点交替节奏。tz 用自家主题色，
+   其余主题用 primary。 */
 .server-list tbody tr[aria-expanded] > td {
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01) 55%, rgba(0, 0, 0, 0.16));
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--primary) 15%, transparent), transparent 46%, rgba(0, 0, 0, 0.20));
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent);
 }
 .server-list tbody tr.row-alt > td {
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.20) 55%, rgba(0, 0, 0, 0.38));
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--primary) 10%, transparent), transparent 46%, rgba(0, 0, 0, 0.30));
+}
+html[data-theme-preset^="tz-"] .server-list tbody tr[aria-expanded] > td {
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--tz-line) 17%, transparent), transparent 46%, rgba(0, 0, 0, 0.20));
+}
+html[data-theme-preset^="tz-"] .server-list tbody tr.row-alt > td {
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--tz-line) 11%, transparent), transparent 46%, rgba(0, 0, 0, 0.30));
 }
