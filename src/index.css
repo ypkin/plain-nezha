@@ -301,27 +301,22 @@ html[data-theme-preset="tz-carbon"] header.sticky {
    表头：自成一个更亮的层，底边压线；行：每行顶边一道微光，像叠起来的薄板。 */
 .server-list {
   background-color: color-mix(in srgb, var(--card) 58%, transparent);
-  background-image: linear-gradient(165deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.03) 42%, rgba(0, 0, 0, 0.10));
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.02) 30%, rgba(0, 0, 0, 0.16) 70%, rgba(0, 0, 0, 0.30));
   -webkit-backdrop-filter: blur(18px) saturate(1.5);
   backdrop-filter: blur(18px) saturate(1.5);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 24px 48px -24px rgba(0, 0, 0, 0.6), 0 4px 14px -6px rgba(0, 0, 0, 0.45);
 }
 html[data-theme-preset^="tz-"]:not([data-theme-preset="tz-neon"]):not([data-theme-preset="tz-carbon"]) .server-list {
-  background-image: linear-gradient(165deg, color-mix(in srgb, var(--tz-glow) 16%, rgba(255, 255, 255, 0.10)), rgba(255, 255, 255, 0.03) 42%, rgba(0, 0, 0, 0.10));
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--tz-glow) 18%, rgba(255, 255, 255, 0.10)), rgba(255, 255, 255, 0.02) 30%, rgba(0, 0, 0, 0.16) 70%, rgba(0, 0, 0, 0.30));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 0 28px var(--tz-glow), 0 24px 48px -24px rgba(0, 0, 0, 0.65);
 }
 .server-list thead th {
-  background-color: rgba(255, 255, 255, 0.06);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.01));
+  background-color: transparent;
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.10);
 }
-/* 玻璃质感（2026-11-15 用户点名要）：卡片半透明＋背景模糊（透出壁纸）、
-   斜向折射高光、亮边描框；行是玻璃里的分层——奇数行一层薄雾高光、
-   偶数行沉一档，表头是更亮的一片玻璃。霓虹/碳黑有自家体系不走这里。 */
+/* 整体渐变（2026-11-15 用户点名要）：整卡只有一道渐变——保留玻璃的
+   半透明与背景模糊，渐变从统计头一气贯到最后一行；内部各区不再自带
+   底色（统计头/分组栏/表头/行全部透明），只留发丝分隔线。 */
 .server-list tbody tr[aria-expanded] > td {
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 60%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-.server-list tbody tr.row-alt > td {
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(0, 0, 0, 0.05) 60%);
 }
