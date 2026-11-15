@@ -172,7 +172,7 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
               <Flag code={node.country} showCode={false} className="[&_img]:h-3 [&_img]:w-3 [&_img]:rounded-full" />
             </span>
             <span
-              className={cn("truncate text-muted-foreground", badge === "busy" || badge === "both" ? "shine-busy" : badge === "fast" ? "shine-fast" : undefined)}
+              className={cn("truncate text-foreground", badge === "busy" || badge === "both" ? "shine-busy" : badge === "fast" ? "shine-fast" : undefined)}
               title={node.name}
             >
               {node.name}

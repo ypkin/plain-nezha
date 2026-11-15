@@ -294,3 +294,22 @@ html[data-theme-preset="tz-carbon"] header.sticky {
   background-color: color-mix(in srgb, var(--primary) 40%, black);
   border-color: color-mix(in srgb, var(--primary) 40%, black);
 }
+
+/* 列表层次感（2026-11-15 用户点名要）：只用表面明暗与内外阴影分层，不改布局与配色。
+   卡片：上亮下暗的表面 + 落地影，整块从页面浮起；
+   tz 另补一层落地影并保留自家辉光（霓虹/碳黑有独立阴影与动画体系，不覆盖）；
+   表头：自成一个更亮的层，底边压线；行：每行顶边一道微光，像叠起来的薄板。 */
+.server-list {
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--card) 97%, white), var(--card) 34%, color-mix(in srgb, var(--card) 95%, black));
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6), 0 4px 14px -6px rgba(0, 0, 0, 0.45);
+}
+html[data-theme-preset^="tz-"]:not([data-theme-preset="tz-neon"]):not([data-theme-preset="tz-carbon"]) .server-list {
+  box-shadow: inset 0 1px 0 var(--tz-line), 0 0 28px var(--tz-glow), 0 24px 48px -24px rgba(0, 0, 0, 0.65);
+}
+.server-list thead th {
+  background-color: color-mix(in srgb, var(--foreground) 5%, var(--card));
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+.server-list tbody tr[aria-expanded] > td {
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent);
+}
