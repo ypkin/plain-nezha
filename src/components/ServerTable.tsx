@@ -111,7 +111,7 @@ function sortNodes(nodes: Node[], field: SortField | null, order: SortOrder): No
 
 // Accordion: the open row is owned by ServerTable, not by each row,
 // so opening one node always closes the previously opened one.
-function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fast" | "both" | null; open: boolean; onToggle: () => void }) {
+function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" | "fast" | "both" | null; open: boolean; onToggle: () => void; alt?: boolean }) {
   const m = node.online ? node.metrics : null
   const toggle = onToggle
 
@@ -125,6 +125,7 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
         className={cn(
           "cursor-pointer transition-colors hover:bg-muted/40",
           open && "border-b-0 bg-muted/25 hover:bg-muted/30",
+          alt && "row-alt",
         )}
       >
         <TableCell className={cn(COL.status, "text-center")}>
@@ -419,10 +420,11 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
                 </TableCell>
               </TableRow>
             ) : (
-              sortedNodes.map((n) => (
+              sortedNodes.map((n, i) => (
                 <Row
                   key={n.id}
                   node={n}
+                  alt={i % 2 === 1}
                   badge={n.id === busiestId && n.id === fastestId ? "both" : n.id === busiestId ? "busy" : n.id === fastestId ? "fast" : null}
                   open={openId === n.id}
                   onToggle={() => setOpenId((cur) => (cur === n.id ? null : n.id))}
