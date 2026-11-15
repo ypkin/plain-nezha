@@ -22,7 +22,7 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
       <span className="tnum truncate text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px]">
         {label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)}
       </span>
-      <Meter pct={pct} floor={5} className="@max-sm:h-[2px]" />
+      <Meter pct={pct} floor={5} className="@max-sm:h-[3px]" />
     </div>
   )
 }
@@ -169,7 +169,7 @@ function Row({ node, badge, open, onToggle }: { node: Node; badge?: "busy" | "fa
           <div className="flex items-center gap-1.5 min-w-0">
             <ChevronRight className={cn("size-3.5 shrink-0 text-muted-foreground/50 transition-transform duration-200 @max-sm:hidden", open && "rotate-90 text-foreground")} />
             <span className="hidden shrink-0 @max-sm:inline-flex @max-sm:ml-2">
-              <Flag code={node.country} showCode={false} className="[&_img]:h-3 [&_img]:w-3 [&_img]:rounded-full" />
+              <Flag code={node.country} showCode={false} className="[&_img]:h-3 [&_img]:w-3 [&_img]:rounded-full [&_img]:ring-1 [&_img]:ring-white/25" />
             </span>
             <span
               className={cn("truncate text-foreground", badge === "busy" || badge === "both" ? "shine-busy" : badge === "fast" ? "shine-fast" : undefined)}
@@ -335,22 +335,22 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
   return (
     <Card className="@container gap-0 overflow-hidden py-0 server-list">
       {/* Header: the transplanted stat bar alone, sized to the card. */}
-      <CardHeader className="border-b border-border/60 px-3 py-2.5 max-md:px-1 md:hidden">
+      <CardHeader className="border-b border-border/60 px-3 py-2.5 max-md:px-1 md:hidden bg-black/25 shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)]">
         <StatBar nodes={groupNodes} className="w-full" />
       </CardHeader>
 
       {/* Group selector pill bar (renders only when node groups exist) */}
       {groups.length > 0 && (
         <div className="flex items-center gap-2 border-b border-border/60 bg-muted/20 px-3 py-1.5">
-          <div className="flex items-center gap-1 overflow-x-auto text-[11px] scrollbar-none">
+          <div className="flex items-center gap-1 overflow-x-auto text-[11px] scrollbar-none rounded-lg bg-black/30 px-1 py-1 shadow-[inset_0_1px_3px_rgba(0,0,0,0.55),inset_0_-1px_0_rgba(255,255,255,0.04)]">
           <button
             type="button"
             onClick={() => onSelectedGroupChange(null)}
             className={cn(
               "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
               selectedGroup === null
-                ? "bg-primary text-primary-foreground font-medium"
-                : "bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground",
+                ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+                : "text-muted-foreground hover:text-foreground hover:bg-white/5",
             )}
           >
             全部 ({nodes.length})
@@ -365,8 +365,8 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
                 className={cn(
                   "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
                   selectedGroup === g
-                    ? "bg-primary text-primary-foreground font-medium"
-                    : "bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground",
+                    ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/5",
                 )}
               >
                 {g} ({count})
@@ -380,8 +380,8 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
               className={cn(
                 "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
                 selectedGroup === ""
-                  ? "bg-primary text-primary-foreground font-medium"
-                  : "bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground",
+                  ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5",
               )}
             >
               未分组 ({nodes.filter((n) => !(n.group ?? "")).length})
