@@ -103,7 +103,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
         </span>
       </div>
 
-      <div className="stat-divider h-4 w-px shrink-0" aria-hidden="true" />
+      <div className="stat-divider h-2 w-px shrink-0" aria-hidden="true" />
 
       {/* Traffic on one line: ↑ rate + total, then ↓ rate + total, the pair
           centred in the one flexible cell. That cell absorbs every
@@ -123,7 +123,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
         </span>
       </div>
 
-      <div className="stat-divider h-4 w-px shrink-0" aria-hidden="true" />
+      <div className="stat-divider h-2 w-px shrink-0" aria-hidden="true" />
 
       {/* Busiest: flame + name. The name slot is sized by the longest node
           name in the fleet (nameCh) and right-aligned, so the widest name
@@ -134,7 +134,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
         <span className="shine-busy inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{busiest?.name ?? "-"}</span>
       </div>
 
-      <div className="stat-divider h-4 w-px shrink-0" aria-hidden="true" />
+      <div className="stat-divider h-2 w-px shrink-0" aria-hidden="true" />
 
       {/* Fastest: bolt + name, same fixed-slot treatment. */}
       <div className="flex shrink-0 items-center gap-[3px] whitespace-nowrap" title="最快节点：下载最快">
