@@ -340,7 +340,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
   return (
     <Card className="@container gap-0 overflow-hidden py-0 server-list">
       {/* Header: the transplanted stat bar alone, sized to the card. */}
-      <CardHeader className="border-b border-border/60 px-3 py-2.5 max-md:px-1 md:hidden">
+      <CardHeader className="border-b border-border/60 px-3 py-2.5 md:hidden">
         <StatBar nodes={groupNodes} className="w-full" />
       </CardHeader>
 
