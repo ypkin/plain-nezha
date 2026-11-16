@@ -37,6 +37,10 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
     if (!fastest || m.net_rx > fastest.rx) fastest = { name: node.name, rx: m.net_rx }
   }
   const offline = nodes.length - online
+  // Name slots are sized by the longest node name in the fleet, so the
+  // widest name fits its slot exactly and the centred bar keeps equal
+  // left/right margins in the worst case, not just for short names.
+  const nameCh = Math.max(1, ...nodes.map((n) => n.name.length))
   if (variant === "line") {
     // One-line edition for the group bar on wide screens: same data and shine
     // colours as the stacked bar, laid out flat — count, rates and totals with
@@ -87,7 +91,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
   return (
     <div className={cn("stat-bar flex flex-nowrap items-center justify-center text-xs [font-weight:700] max-md:text-[10px]", className)}>
       <div className="flex shrink-0 flex-col items-end leading-[17px] max-md:flex-row max-md:items-center max-md:gap-1" title="在线状态">
-        <div aria-hidden="true" className={cn("max-md:ml-4", offline > 0 && "animate-pulse")}>🖥️</div>
+        <div aria-hidden="true" className={offline > 0 ? "animate-pulse" : undefined}>🖥️</div>
         <div className="tnum flex items-center whitespace-nowrap">
           <span className={cn("inline-block min-w-[2ch] text-center", offline > 0 && "animate-pulse text-[#fb7185]")}>{offline > 0 ? offline : ""}</span>
           <span className={cn("mx-px text-[#a1a1aa]", offline === 0 && "invisible")}>/</span>
@@ -97,18 +101,18 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
         </div>
       </div>
 
-      <div className="stat-divider mx-3 h-6 max-md:h-2 w-px shrink-0 max-md:mx-0.5" aria-hidden="true" />
+      <div className="stat-divider mx-3 h-6 max-md:h-2 w-px shrink-0 max-md:mx-0" aria-hidden="true" />
 
-      <div className="flex shrink-0 flex-col leading-[17px] max-md:flex-row max-md:items-center max-md:gap-1">
+      <div className="flex shrink-0 flex-col leading-[17px] max-md:flex-row max-md:items-center max-md:gap-[2px]">
         <div className="flex items-center gap-2 whitespace-nowrap max-md:gap-1">
           <span aria-hidden="true" className="text-[11px] leading-none text-[#22d3ee]">↑</span>
-          <span title="实时上传速度" className="shine-up tnum inline-block min-w-[6ch] max-md:min-w-[5ch] max-md:w-[5ch]">{compact(txRate)}</span>
-          <span title="累计上传流量" className="shine-up tnum inline-block min-w-[6ch] max-md:min-w-[5ch] max-md:w-[5ch]">{compact(txTotal)}</span>
+          <span title="实时上传速度" className="shine-up tnum inline-block min-w-[6ch] max-md:min-w-[4.6ch] max-md:w-[4.6ch]">{compact(txRate)}</span>
+          <span title="累计上传流量" className="shine-up tnum inline-block min-w-[6ch] max-md:min-w-[4.6ch] max-md:w-[4.6ch]">{compact(txTotal)}</span>
         </div>
         <div className="flex items-center gap-2 whitespace-nowrap max-md:gap-1">
           <span aria-hidden="true" className="text-[11px] leading-none text-[#fde047]">↓</span>
-          <span title="实时下载速度" className="shine-down tnum inline-block min-w-[6ch] max-md:min-w-[5ch] max-md:w-[5ch]">{compact(rxRate)}</span>
-          <span title="累计下载流量" className="shine-down tnum inline-block min-w-[6ch] max-md:min-w-[5ch] max-md:w-[5ch]">{compact(rxTotal)}</span>
+          <span title="实时下载速度" className="shine-down tnum inline-block min-w-[6ch] max-md:min-w-[4.6ch] max-md:w-[4.6ch]">{compact(rxRate)}</span>
+          <span title="累计下载流量" className="shine-down tnum inline-block min-w-[6ch] max-md:min-w-[4.6ch] max-md:w-[4.6ch]">{compact(rxTotal)}</span>
         </div>
       </div>
 
@@ -131,18 +135,18 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
 
       {/* Mobile only: busiest/fastest markers with fixed-width names,
           no values, so the bar stays one line. */}
-      <div className="stat-divider mx-0.5 h-2 w-px shrink-0 md:hidden" aria-hidden="true" />
+      <div className="stat-divider mx-0 h-2 w-px shrink-0 md:hidden" aria-hidden="true" />
 
       <div className="flex shrink-0 items-center gap-1 whitespace-nowrap md:hidden" title="最忙节点：CPU 最高">
         <span aria-hidden="true" className={cn(busiest && busiest.cpu > 15 && "animate-pulse")}>🔥</span>
-        <span className="shine-busy inline-block w-[6ch] text-center">{busiest?.name ?? "-"}</span>
+        <span className="shine-busy inline-block text-center" style={{ width: `${nameCh}ch` }}>{busiest?.name ?? "-"}</span>
       </div>
 
-      <div className="stat-divider mx-0.5 h-2 w-px shrink-0 md:hidden" aria-hidden="true" />
+      <div className="stat-divider mx-0 h-2 w-px shrink-0 md:hidden" aria-hidden="true" />
 
       <div className="flex shrink-0 items-center gap-1 whitespace-nowrap md:hidden" title="最快节点：下载最快">
         <span aria-hidden="true" className={cn(fastest && fastest.rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
-        <span className="shine-fast inline-block w-[6ch] text-center">{fastest?.name ?? "-"}</span>
+        <span className="shine-fast inline-block text-center" style={{ width: `${nameCh}ch` }}>{fastest?.name ?? "-"}</span>
       </div>
     </div>
   )
