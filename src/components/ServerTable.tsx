@@ -26,7 +26,7 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
         className={cn("relative h-full rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)] transition-[width] duration-500", barTone(v))}
         style={{ width: `${v}%` }}
       />
-      <span className="tnum absolute inset-0 flex items-center justify-center text-[10px] leading-none font-medium text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.65)]">
+      <span className="tnum bar-num absolute inset-0 flex items-center justify-center text-[10px] leading-none text-white">
         {text}
       </span>
     </div>
