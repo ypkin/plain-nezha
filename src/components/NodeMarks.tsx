@@ -129,7 +129,7 @@ export function Meter({
   return (
     <div title={title} className={cn("h-1.5 w-full overflow-hidden rounded-full bg-primary/15 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]", className)}>
       {showFill && (
-        <div className={cn("relative h-full rounded-full transition-[width] duration-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)]", barTone(v))} style={{ width: `${v}%` }}>
+        <div className={cn("relative h-full rounded-full transition-[width] duration-500 brightness-[0.85] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)]", barTone(v))} style={{ width: `${v}%` }}>
           {children}
         </div>
       )}
