@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react"
 
-import { Dot, Flag, Meter, OsIcon } from "@/components/NodeMarks"
+import { barTone, Dot, Flag, OsIcon } from "@/components/NodeMarks"
 import { RowDetails } from "@/components/RowDetails"
 import { StatBar } from "@/components/StatBar"
 import { Badge } from "@/components/ui/badge"
@@ -13,18 +13,22 @@ import { compact, CYCLES, daysUntil, distro, duration, FOREVER, money, percent }
 import { cn } from "@/lib/utils"
 
 /**
- * The figure over its meter, as shadcn's stat tiles set them.
+ * The figure inside its meter, nezha v0 style (2026-11-17 用户点名）:
+ * a full-width chunky bar, the fill in the status colour, the percentage
+ * written over the whole track so it stays centred as the fill moves.
  */
 function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const v = pct === null ? 0 : Math.min(100, Math.max(0, pct))
+  const text = label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)
   return (
-    /* 进度条和数据一般宽（2026-11-15 用户点名）：单元按数字宽度收缩，
-       条 w-full 跟数字同宽、两边齐；min-w 防 0.0% 这类短数字把条压成点 */
-    <div className="mx-auto flex w-fit min-w-[5.5ch] flex-col items-stretch gap-0.5">
-      <span className="tnum truncate text-center text-[11px] leading-none text-muted-foreground @max-3xl:text-[9px] @max-sm:text-[11px]">
-        {label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)}
+    <div className="relative h-[15px] w-full overflow-hidden rounded-[4px] bg-primary/15 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
+      <div
+        className={cn("h-full shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)] transition-[width] duration-500", barTone(v))}
+        style={{ width: `${v}%` }}
+      />
+      <span className="tnum absolute inset-0 flex items-center justify-center text-[10px] leading-none font-medium text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.65)]">
+        {text}
       </span>
-      <Meter pct={pct} floor={5} className="h-1 w-full @max-sm:h-[2px]" />
     </div>
   )
 }
