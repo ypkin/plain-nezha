@@ -87,7 +87,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
   return (
     <div className={cn("stat-bar flex flex-nowrap items-center justify-center text-xs [font-weight:700] max-md:text-[10px]", className)}>
       <div className="flex shrink-0 flex-col items-end leading-[17px] max-md:flex-row max-md:items-center max-md:gap-1" title="在线状态">
-        <div aria-hidden="true" className={cn("max-md:ml-2", offline > 0 && "animate-pulse")}>🖥️</div>
+        <div aria-hidden="true" className={cn("max-md:ml-4", offline > 0 && "animate-pulse")}>🖥️</div>
         <div className="tnum flex items-center whitespace-nowrap">
           <span className={cn("inline-block min-w-[2ch] text-center", offline > 0 && "animate-pulse text-[#fb7185]")}>{offline > 0 ? offline : ""}</span>
           <span className={cn("mx-px text-[#a1a1aa]", offline === 0 && "invisible")}>/</span>
