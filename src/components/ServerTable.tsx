@@ -358,7 +358,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
             className={cn(
               "shrink-0 rounded-full px-2.5 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-6 inline-flex items-center",
               selectedGroup === null
-                ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+                ? "gtab-sel bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
                 : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
             )}
           >
@@ -374,7 +374,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
                 className={cn(
                   "shrink-0 rounded-full px-2.5 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-6 inline-flex items-center",
                   selectedGroup === g
-                    ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+                    ? "gtab-sel bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
                     : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
                 )}
               >
@@ -389,7 +389,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
               className={cn(
                 "shrink-0 rounded-full px-2.5 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-6 inline-flex items-center",
                 selectedGroup === ""
-                  ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+                  ? "gtab-sel bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
                   : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
               )}
             >

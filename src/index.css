@@ -293,6 +293,15 @@ html:not(.dark) .bar-num {
   color: #000;
   text-shadow: 0 0 2px rgba(255, 255, 255, 0.35);
 }
+/* Light mode: the selected group tab follows the theme colour (2026-11-17
+   用户点名「分组标签选中色与主题一致」). Light-mode primary is a shared sky
+   placeholder for every tz theme, so the pill borrows tz-line instead;
+   carbon is exempt (its monochrome primary already is its colour).
+   Dark text matches how dark mode pairs these bright fills. */
+html:not(.dark)[data-theme-preset^="tz-"]:not([data-theme-preset="tz-carbon"]) .gtab-sel {
+  background-color: var(--tz-line);
+  color: #111827;
+}
 /* Carbon + mobile only (2026-11-17 用户点名「仅限碳黑」「仅手机端」，经确认
    指列表每行的网速数据、不是统计栏——统计栏保持原青黄): row speed figures,
    upload ice blue, download dusk purple. Elsewhere the figures inherit
