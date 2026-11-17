@@ -271,6 +271,12 @@ html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum:last-o
 html[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
   background-color: var(--color-emerald-500, #00bc7d);
 }
+/* Carbon dark mode: bar fills are gray too (2026-11-17 用户点名「暗模式
+   碳黑进度条改成灰色」), same #808080 as carbon light; the semantic green
+   above is fully superseded for fills. Danger fills keep amber/red. */
+html.dark[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
+  background-color: #808080;
+}
 /* Bar tracks pure black in dark mode (2026-11-17 用户点名「进度条也纯黑」，
    指暗色模式；亮模式保持组件的 bg-primary/15 柔和轨道）。 */
 html.dark .bar-track {
