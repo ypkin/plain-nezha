@@ -125,21 +125,22 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
 
       <div className="stat-divider h-2 w-px shrink-0" aria-hidden="true" />
 
-      {/* Busiest: flame + name. The name slot is sized by the longest node
-          name in the fleet (nameCh) and right-aligned, so the widest name
-          fits exactly, glyphs hug the divider side, and the block never
-          resizes when the busiest node changes. */}
-      <div className="flex shrink-0 items-center gap-[2px] whitespace-nowrap" title="最忙节点：CPU 最高">
+      {/* Busiest: flame + name as one right-aligned unit inside a block
+          as wide as icon + gap + the longest fleet name (nameCh), so the
+          block never resizes when the busiest node changes, yet the icon
+          always hugs the name — short names no longer float away from
+          their icon (2026-11-17 用户指图标与名字间距不一致）. */}
+      <div className="flex shrink-0 items-center justify-end gap-[2px] whitespace-nowrap" style={{ width: `calc(14.5px + ${nameCh}ch)` }} title="最忙节点：CPU 最高">
         <span aria-hidden="true" className={cn(busiest && busiest.cpu > 15 && "animate-pulse")}>🔥</span>
-        <span className="shine-busy inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{busiest?.name ?? "-"}</span>
+        <span className="shine-busy inline-block truncate" style={{ maxWidth: `${nameCh}ch` }}>{busiest?.name ?? "-"}</span>
       </div>
 
       <div className="stat-divider h-2 w-px shrink-0" aria-hidden="true" />
 
-      {/* Fastest: bolt + name, same fixed-slot treatment. */}
-      <div className="flex shrink-0 items-center gap-[2px] whitespace-nowrap" title="最快节点：下载最快">
+      {/* Fastest: bolt + name, same right-aligned-unit treatment. */}
+      <div className="flex shrink-0 items-center justify-end gap-[2px] whitespace-nowrap" style={{ width: `calc(14.5px + ${nameCh}ch)` }} title="最快节点：下载最快">
         <span aria-hidden="true" className={cn(fastest && fastest.rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
-        <span className="shine-fast inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{fastest?.name ?? "-"}</span>
+        <span className="shine-fast inline-block truncate" style={{ maxWidth: `${nameCh}ch` }}>{fastest?.name ?? "-"}</span>
       </div>
     </div>
   )
