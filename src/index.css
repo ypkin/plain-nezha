@@ -302,6 +302,12 @@ html:not(.dark)[data-theme-preset^="tz-"]:not([data-theme-preset="tz-carbon"]) .
   background-color: var(--tz-line);
   color: #111827;
 }
+/* Light mode: the theme-picker sparkle follows the theme colour too
+   (2026-11-17 用户点名「主题选择那小星星未与主题色一致」); it was
+   text-primary, i.e. the shared sky placeholder. Carbon exempt as above. */
+html:not(.dark)[data-theme-preset^="tz-"]:not([data-theme-preset="tz-carbon"]) .theme-star {
+  color: var(--tz-line);
+}
 /* Carbon + mobile only (2026-11-17 用户点名「仅限碳黑」「仅手机端」，经确认
    指列表每行的网速数据、不是统计栏——统计栏保持原青黄): row speed figures,
    upload ice blue, download dusk purple. Elsewhere the figures inherit

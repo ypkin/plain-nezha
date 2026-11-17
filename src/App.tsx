@@ -227,7 +227,7 @@ function ThemeSettingsControl({
         )}
         title="主题配色与质感设置"
       >
-        <Sparkles className="size-3.5 text-primary" />
+        <Sparkles className="size-3.5 text-primary theme-star" />
         <span className="sr-only">主题与质感设置</span>
       </Button>
 
