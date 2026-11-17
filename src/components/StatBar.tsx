@@ -89,7 +89,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
     )
   }
   return (
-    <div className={cn("stat-bar grid w-full grid-cols-[auto_1px_1fr_1px_auto_1px_auto] items-center gap-x-[2px] text-[9.5px] [font-weight:700]", className)}>
+    <div className={cn("stat-bar grid w-full grid-cols-[auto_1px_1fr_1px_auto_1px_auto] items-center gap-x-[2px] text-[10px] [font-weight:700]", className)}>
       {/* Server block: icon + counts on one line. The offline slot is
           always reserved, so a dropout fills it in place — no shifting. */}
       <div className="flex shrink-0 items-center gap-[3px] whitespace-nowrap" title="在线状态">
@@ -112,12 +112,12 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
           right-aligned slots — data changes never resize anything. */}
       <div className="flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap">
         <span className="flex items-center gap-[3px]">
-          <span aria-hidden="true" className="text-[10px] leading-none text-[#22d3ee]">↑</span>
+          <span aria-hidden="true" className="text-[11px] leading-none text-[#22d3ee]">↑</span>
           <span title="实时上传速度" className="shine-up tnum inline-block w-[4.25ch] text-right">{compact(txRate)}</span>
           <span title="累计上传流量" className="shine-up tnum inline-block w-[4.75ch] text-right">{compact(txTotal)}</span>
         </span>
         <span className="flex items-center gap-[3px]">
-          <span aria-hidden="true" className="text-[10px] leading-none text-[#fde047]">↓</span>
+          <span aria-hidden="true" className="text-[11px] leading-none text-[#fde047]">↓</span>
           <span title="实时下载速度" className="shine-down tnum inline-block w-[4.25ch] text-right">{compact(rxRate)}</span>
           <span title="累计下载流量" className="shine-down tnum inline-block w-[4.75ch] text-right">{compact(rxTotal)}</span>
         </span>
