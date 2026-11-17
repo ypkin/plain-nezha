@@ -213,10 +213,10 @@ html:not(.dark) .stat-bar span {
 
 /* tz 系列主题质感：仅当 data-theme-preset 以 tz- 开头时生效，其余主题
    不命中选择器，视觉上与改动前完全一致。*/
+/* 所有背景纯黑（2026-11-17 用户点名）：tz 主题的页面底色不再用渐变与斜纹理，
+   --background/--card 等面色变量已在 themes.ts 里统一置 #000000。 */
 html[data-theme-preset^="tz-"] body {
-  background-image:
-    repeating-linear-gradient(115deg, color-mix(in srgb, var(--tz-line) 5%, transparent) 0 1px, transparent 1px 140px),
-    linear-gradient(180deg, var(--background), var(--tz-bg2));
+  background-image: none;
 }
 html[data-theme-preset^="tz-"] header.sticky {
   background-color: var(--card);
