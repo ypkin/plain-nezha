@@ -276,8 +276,10 @@ html[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
    upload ice blue, download dusk purple. Elsewhere the figures inherit
    the muted foreground as before. */
 @media (max-width: 640px) {
-  html[data-theme-preset="tz-carbon"] .spd-up { color: #38bdf8; }
-  html[data-theme-preset="tz-carbon"] .spd-dn { color: #a78bfa; }
+  /* Must outrank the older carbon reset above (div.text-muted-foreground >
+     span.tnum:first/last-of-type -> muted), hence the mirrored selector. */
+  html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum.spd-up:first-of-type { color: #38bdf8; }
+  html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum.spd-dn:last-of-type { color: #a78bfa; }
 }
 html[data-theme-preset="tz-neon"] .bg-card.rounded-lg,
 html[data-theme-preset="tz-neon"] .server-list {
