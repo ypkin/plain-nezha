@@ -284,7 +284,7 @@ html.dark .bar-track {
 }
 /* Progress bars are built from vertical lines (2026-11-17 用户点名
    「进度条改成由竖线组成」): a repeating mask cuts every solid fill into
-   1px lines with 2px gaps, so all fill colours (theme, danger, carbon
+   1px lines with 1.5px gaps, so all fill colours (theme, danger, carbon
    gray) and the neon gradient keep working unchanged. The percentage
    figures are siblings of the fill, so they stay solid. The fill's
    rounded-full cap is removed so every line spans the full bar height
@@ -294,8 +294,8 @@ div.relative.h-full.bg-emerald-500,
 div.relative.h-full.bg-amber-500,
 div.relative.h-full.bg-red-500 {
   border-radius: 0;
-  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 3px);
-  mask-image: repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 3px);
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 2.5px);
+  mask-image: repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 2.5px);
 }
 .bar-track {
   border-radius: 0;
