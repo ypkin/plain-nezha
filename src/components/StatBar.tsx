@@ -89,7 +89,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
     )
   }
   return (
-    <div className={cn("stat-bar grid w-full grid-cols-[auto_1px_1fr_1px_auto_1px_auto] items-center gap-x-[2px] text-[10px] [font-weight:700]", className)}>
+    <div className={cn("stat-bar grid w-full grid-cols-[auto_1px_1fr_1px_auto_1px_auto] items-center gap-x-[1px] pr-[15.5px] text-[10px] [font-weight:700]", className)}>
       {/* Server block: icon + counts on one line. The offline slot is
           always reserved, so a dropout fills it in place — no shifting. */}
       <div className="flex shrink-0 items-center gap-[3px] whitespace-nowrap" title="在线状态">
@@ -110,13 +110,13 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
           viewport difference, so the fixed blocks at both ends never move
           and the bar can never overflow. All values sit in fixed-width
           right-aligned slots — data changes never resize anything. */}
-      <div className="flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap">
-        <span className="flex items-center gap-[3px]">
+      <div className="flex shrink-0 items-center justify-center gap-[2px] whitespace-nowrap">
+        <span className="flex items-center gap-[2px]">
           <span aria-hidden="true" className="text-[11px] leading-none text-[#22d3ee]">↑</span>
           <span title="实时上传速度" className="shine-up tnum inline-block w-[4.25ch] text-right">{compact(txRate)}</span>
           <span title="累计上传流量" className="shine-up tnum inline-block w-[4.75ch] text-right">{compact(txTotal)}</span>
         </span>
-        <span className="flex items-center gap-[3px]">
+        <span className="flex items-center gap-[2px]">
           <span aria-hidden="true" className="text-[11px] leading-none text-[#fde047]">↓</span>
           <span title="实时下载速度" className="shine-down tnum inline-block w-[4.25ch] text-right">{compact(rxRate)}</span>
           <span title="累计下载流量" className="shine-down tnum inline-block w-[4.75ch] text-right">{compact(rxTotal)}</span>
@@ -129,7 +129,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
           name in the fleet (nameCh) and right-aligned, so the widest name
           fits exactly, glyphs hug the divider side, and the block never
           resizes when the busiest node changes. */}
-      <div className="flex shrink-0 items-center gap-[3px] whitespace-nowrap" title="最忙节点：CPU 最高">
+      <div className="flex shrink-0 items-center gap-[2px] whitespace-nowrap" title="最忙节点：CPU 最高">
         <span aria-hidden="true" className={cn(busiest && busiest.cpu > 15 && "animate-pulse")}>🔥</span>
         <span className="shine-busy inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{busiest?.name ?? "-"}</span>
       </div>
@@ -137,7 +137,7 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
       <div className="stat-divider h-2 w-px shrink-0" aria-hidden="true" />
 
       {/* Fastest: bolt + name, same fixed-slot treatment. */}
-      <div className="flex shrink-0 items-center gap-[3px] whitespace-nowrap" title="最快节点：下载最快">
+      <div className="flex shrink-0 items-center gap-[2px] whitespace-nowrap" title="最快节点：下载最快">
         <span aria-hidden="true" className={cn(fastest && fastest.rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
         <span className="shine-fast inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{fastest?.name ?? "-"}</span>
       </div>
