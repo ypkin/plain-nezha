@@ -200,9 +200,9 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
             <div className="grid grid-cols-[3.125rem_auto_3.125rem] @max-3xl:grid-cols-[2.25rem_auto_2.25rem] items-center justify-center gap-1 whitespace-nowrap text-xs @max-3xl:text-[9px] @max-3xl:leading-none @max-sm:text-[11px] @max-sm:gap-0.5 text-muted-foreground">
               {/* 竖线对齐改定宽网格（2026-11-15）：旧 Num 槽是 min-width+ch 单位，
                   内容超槽就被撑大、位置随数字长短跑；定宽列锁死两边与竖线 */}
-              <span className="tnum text-right">{compact(m.net_tx)}</span>
+              <span className="tnum spd-up text-right">{compact(m.net_tx)}</span>
               <span className="text-center text-muted-foreground/60">|</span>
-              <span className="tnum text-left">{compact(m.net_rx)}</span>
+              <span className="tnum spd-dn text-left">{compact(m.net_rx)}</span>
             </div>
           ) : (
             <span className="text-muted-foreground text-xs @max-3xl:text-[9px] @max-sm:text-[11px]">— | —</span>
