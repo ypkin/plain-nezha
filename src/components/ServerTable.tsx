@@ -344,13 +344,13 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
   return (
     <Card className="@container gap-0 overflow-hidden py-0 server-list">
       {/* Header: the transplanted stat bar alone, sized to the card. */}
-      <CardHeader className="border-b border-border/60 px-3 py-2.5 md:hidden">
+      <CardHeader className="border-b border-border/60 px-3 py-[10.5px] md:hidden">
         <StatBar nodes={groupNodes} className="w-full" />
       </CardHeader>
 
       {/* Group selector pill bar (renders only when node groups exist) */}
       {groups.length > 0 && (
-        <div className="flex items-center gap-2 border-b border-border/60 px-3 py-1.5">
+        <div className="flex items-center gap-2 border-b border-border/60 px-3 py-[3.5px] md:py-1.5">
           <div className="flex items-center gap-1 overflow-x-auto text-[11px] scrollbar-none rounded-lg bg-black/30 px-1 py-1 shadow-[inset_0_1px_3px_rgba(0,0,0,0.55),inset_0_-1px_0_rgba(255,255,255,0.04)]">
           <button
             type="button"
