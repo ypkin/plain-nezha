@@ -130,16 +130,16 @@ export function StatBar({ nodes, className, variant = "stack" }: { nodes: Node[]
           fits exactly, glyphs hug the divider side, and the block never
           resizes when the busiest node changes. */}
       <div className="flex shrink-0 items-center gap-[3px] whitespace-nowrap" title="最忙节点：CPU 最高">
-        <span className="shine-busy inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{busiest?.name ?? "-"}</span>
         <span aria-hidden="true" className={cn(busiest && busiest.cpu > 15 && "animate-pulse")}>🔥</span>
+        <span className="shine-busy inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{busiest?.name ?? "-"}</span>
       </div>
 
       <div className="stat-divider h-2 w-px shrink-0" aria-hidden="true" />
 
       {/* Fastest: bolt + name, same fixed-slot treatment. */}
       <div className="flex shrink-0 items-center gap-[3px] whitespace-nowrap" title="最快节点：下载最快">
-        <span className="shine-fast inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{fastest?.name ?? "-"}</span>
         <span aria-hidden="true" className={cn(fastest && fastest.rx > 1.5 * 1024 * 1024 && "animate-pulse")}>⚡</span>
+        <span className="shine-fast inline-block truncate text-right" style={{ width: `${nameCh}ch` }}>{fastest?.name ?? "-"}</span>
       </div>
     </div>
   )
