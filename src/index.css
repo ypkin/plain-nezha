@@ -278,8 +278,8 @@ html[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
 @media (max-width: 640px) {
   /* Must outrank the older carbon reset above (div.text-muted-foreground >
      span.tnum:first/last-of-type -> muted), hence the mirrored selector. */
-  html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum.spd-up:first-of-type { color: #34d399; }
-  html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum.spd-dn:last-of-type { color: #fde047; }
+  html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum.spd-up:first-of-type { color: #fde047; }
+  html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum.spd-dn:last-of-type { color: #1e90ff; }
 }
 html[data-theme-preset="tz-neon"] .bg-card.rounded-lg,
 html[data-theme-preset="tz-neon"] .server-list {
