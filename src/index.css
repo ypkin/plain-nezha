@@ -286,6 +286,13 @@ html:not(.dark)[data-theme-preset^="tz-"] div.text-muted-foreground > span.tnum:
 html:not(.dark) div.relative.h-full.bg-emerald-500,
 html:not(.dark) div.relative.h-full.bg-amber-500,
 html:not(.dark) div.relative.h-full.bg-red-500 { filter: brightness(1.1) !important; }
+/* Light mode: in-bar percentage figures in black (2026-11-17 用户点名
+   「cpu 硬盘 内存 文字也变成黑色」), and the dark outline designed for
+   the pale dark-mode glyphs is swapped for a faint light halo. */
+html:not(.dark) .bar-num {
+  color: #000;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.35);
+}
 /* Carbon + mobile only (2026-11-17 用户点名「仅限碳黑」「仅手机端」，经确认
    指列表每行的网速数据、不是统计栏——统计栏保持原青黄): row speed figures,
    upload ice blue, download dusk purple. Elsewhere the figures inherit
