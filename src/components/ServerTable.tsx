@@ -351,15 +351,15 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
       {/* Group selector pill bar (renders only when node groups exist) */}
       {groups.length > 0 && (
         <div className="flex items-center gap-2 border-b border-border/60 px-3 py-[2.5px] md:py-1.5">
-          <div className="flex items-center gap-1 overflow-x-auto text-[11px] scrollbar-none rounded-lg bg-black/30 px-1 py-[2px] shadow-[inset_0_1px_3px_rgba(0,0,0,0.55),inset_0_-1px_0_rgba(255,255,255,0.04)]">
+          <div className="flex items-center gap-1.5 overflow-x-auto text-[11px] scrollbar-none">
           <button
             type="button"
             onClick={() => onSelectedGroupChange(null)}
             className={cn(
-              "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
+              "shrink-0 rounded-full px-2.5 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-6 inline-flex items-center",
               selectedGroup === null
                 ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
-                : "text-muted-foreground hover:text-foreground hover:bg-white/5",
+                : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
             )}
           >
             全部 ({nodes.length})
@@ -372,10 +372,10 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
                 type="button"
                 onClick={() => onSelectedGroupChange(g)}
                 className={cn(
-                  "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
+                  "shrink-0 rounded-full px-2.5 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-6 inline-flex items-center",
                   selectedGroup === g
                     ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/5",
+                    : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
                 )}
               >
                 {g} ({count})
@@ -387,10 +387,10 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
               type="button"
               onClick={() => onSelectedGroupChange("")}
               className={cn(
-                "shrink-0 rounded-md px-2 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-5 inline-flex items-center",
+                "shrink-0 rounded-full px-2.5 py-0 text-[11px] leading-5 transition-colors cursor-pointer h-6 inline-flex items-center",
                 selectedGroup === ""
                   ? "bg-primary text-primary-foreground font-medium shadow-[0_2px_8px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
-                  : "text-muted-foreground hover:text-foreground hover:bg-white/5",
+                  : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
               )}
             >
               未分组 ({nodes.filter((n) => !(n.group ?? "")).length})
