@@ -271,12 +271,14 @@ html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum:last-o
 html[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
   background-color: var(--color-emerald-500, #00bc7d);
 }
-/* Carbon only (2026-11-17 用户点名「仅限碳黑 网速左冰蓝右暮紫」，经确认指
-   列表每行的网速列、不是统计栏——统计栏保持原青黄): row speed figures,
-   upload ice blue, download dusk purple. Other themes inherit the muted
-   foreground as before. */
-html[data-theme-preset="tz-carbon"] .spd-up { color: #38bdf8; }
-html[data-theme-preset="tz-carbon"] .spd-dn { color: #a78bfa; }
+/* Carbon + mobile only (2026-11-17 用户点名「仅限碳黑」「仅手机端」，经确认
+   指列表每行的网速数据、不是统计栏——统计栏保持原青黄): row speed figures,
+   upload ice blue, download dusk purple. Elsewhere the figures inherit
+   the muted foreground as before. */
+@media (max-width: 640px) {
+  html[data-theme-preset="tz-carbon"] .spd-up { color: #38bdf8; }
+  html[data-theme-preset="tz-carbon"] .spd-dn { color: #a78bfa; }
+}
 html[data-theme-preset="tz-neon"] .bg-card.rounded-lg,
 html[data-theme-preset="tz-neon"] .server-list {
   box-shadow: inset 0 1px 0 var(--tz-line), 0 0 36px rgba(34, 211, 238, 0.5);
