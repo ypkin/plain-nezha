@@ -179,8 +179,8 @@
 /* Stat bar shine text (ported from Prism v190, matching its dark-mode look):
    flowing gradients for the live rates/totals and the busiest/fastest names.
    The list's busiest/fastest row names wear the same gradients, so the row
-   names and the stat bar change colour together. In light mode the shine
-   spans get the same 1px black edge Prism uses over bright backgrounds. */
+   names and the stat bar change colour together. (The light-mode 1px black
+   edge these spans used to wear was removed 2026-11-17 on the user's word.) */
 .shine-up, .shine-down, .shine-busy, .shine-fast {
   background-size: 200% 100%;
   -webkit-background-clip: text;
@@ -194,9 +194,6 @@
 .shine-busy { background-image: linear-gradient(110deg, #f0abfc 20%, #fdf4ff 40%, #f0abfc 60%); }
 .shine-fast { background-image: linear-gradient(110deg, #a5b4fc 20%, #eef2ff 40%, #a5b4fc 60%); }
 @keyframes shineFlow { to { background-position: -200% 0; } }
-html:not(.dark) .stat-bar span {
-  filter: drop-shadow(1px 0 0 #000) drop-shadow(-1px 0 0 #000) drop-shadow(0 1px 0 #000) drop-shadow(0 -1px 0 #000);
-}
 .stat-divider {
   background: linear-gradient(to bottom, #4ade80, #22d3ee, #a78bfa, #4ade80);
   background-size: 100% 300%;
