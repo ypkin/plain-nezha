@@ -271,9 +271,9 @@ html[data-theme-preset="tz-carbon"] div.text-muted-foreground > span.tnum:last-o
 html[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
   background-color: var(--color-emerald-500, #00bc7d);
 }
-/* Pure-black bar tracks are carbon-only (2026-11-17 用户点名「纯黑进度条背景
-   仅限碳黑主题」); every other theme keeps the components' bg-primary/15. */
-html[data-theme-preset="tz-carbon"] .bar-track {
+/* Bar tracks pure black in every theme (2026-11-17 用户点名「进度条也纯黑」；
+   当晚早些时候曾限定碳黑专属，后随「所有背景纯黑」改为全主题纯黑）。 */
+.bar-track {
   background-color: #000;
 }
 /* Carbon + mobile only (2026-11-17 用户点名「仅限碳黑」「仅手机端」，经确认
