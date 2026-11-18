@@ -186,6 +186,33 @@ function parseNote(raw: string | undefined): Note | null {
   }
 }
 
+// Kernel versions are not part of the panel's host payload (v0.20.29 does
+// not expose them), so they are collected out-of-band over SSH and served
+// as a static /kernels.json keyed by panel node ID. Best-effort: when the
+// file is missing or a node is absent, the detail view hides the row.
+const kernelsById = new Map<number, string>()
+let kernelsFetchedAt = 0
+let kernelsFlight: Promise<void> | null = null
+
+function ensureKernels(): Promise<void> {
+  if (Date.now() - kernelsFetchedAt < 10 * 60_000) return Promise.resolve()
+  if (!kernelsFlight) {
+    kernelsFlight = (async () => {
+      try {
+        const res = await fetch("/kernels.json", { signal: AbortSignal.timeout(5000) })
+        if (!res.ok) return
+        const data = (await res.json()) as Record<string, unknown>
+        for (const [key, value] of Object.entries(data)) {
+          const id = Number.parseInt(key, 10)
+          if (Number.isFinite(id) && typeof value === "string" && value) kernelsById.set(id, value)
+        }
+        kernelsFetchedAt = Date.now()
+      } catch { /* optional enrichment; ignore failures */ }
+    })().finally(() => { kernelsFlight = null })
+  }
+  return kernelsFlight
+}
+
 function mapServer(sv: V0Server, note: Note | null, notes: Map<number, Note | null>, nowMs: number): Node {
   const host = sv.Host ?? {}
   const state = sv.State ?? {}
@@ -232,7 +259,7 @@ function mapServer(sv: V0Server, note: Note | null, notes: Map<number, Note | nu
       procs: num(state.ProcessCount),
     },
     os: [osBase, host.PlatformVersion].filter(Boolean).join(" "),
-    kernel: "",
+    kernel: kernelsById.get(sv.ID) ?? "",
     arch: host.Arch ?? "",
     virt: host.Virtualization ?? "",
     cpu_name: cpuRaw.replace(/\s*\d+\s+(?:Physical|Virtual)\s+Core.*$/i, "").trim(),
@@ -314,6 +341,7 @@ function extractSnapshot(html: string): { now: number; servers: V0Server[] } | n
 }
 
 async function fetchSnapshot(signal?: AbortSignal): Promise<Node[]> {
+  await ensureKernels()
   const res = await fetch("/panel-snapshot", { signal })
   if (!res.ok) throw new ApiError(res.status, (await res.text()) || res.statusText)
   const html = await res.text()
@@ -1042,6 +1070,7 @@ export function subscribeNodes({ onNodes, onError }: NodeObserver) {
         const data = JSON.parse(event.data) as { now?: number; servers?: V0Server[] }
         if (!Array.isArray(data?.servers)) return
         const nowMs = data.now ?? Date.now()
+        void ensureKernels()
         emit(data.servers.map((sv) => mapServer(sv, null, notesById, nowMs)))
         stopPolling()
         armWatchdog(current)
