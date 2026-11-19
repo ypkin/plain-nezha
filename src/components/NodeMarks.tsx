@@ -127,17 +127,11 @@ export function Meter({
   // the figure itself still carries the exact value.
   const showFill = v >= floor
   return (
-    <div title={title} className={cn("relative h-1.5 w-full overflow-hidden rounded-full bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]", className)}>
+    <div title={title} className={cn("h-1.5 w-full overflow-hidden rounded-full bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]", className)}>
       {showFill && (
-        <>
-          {/* Black underlay: stripe gaps in the fill show black, same as
-              the main bars (2026-11-19 用户点名「换成黑色」).
-              rounded-full matches the fill's silhouette. */}
-          <div className="absolute inset-y-0 left-0 rounded-full bg-black transition-[width] duration-500" style={{ width: `${v}%` }} />
-          <div className={cn("relative h-full rounded-full transition-[width] duration-500 brightness-[0.7] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)]", barTone(v))} style={{ width: `${v}%` }}>
-            {children}
-          </div>
-        </>
+        <div className={cn("relative h-full rounded-full transition-[width] duration-500 brightness-[0.7] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)]", barTone(v))} style={{ width: `${v}%` }}>
+          {children}
+        </div>
       )}
     </div>
   )

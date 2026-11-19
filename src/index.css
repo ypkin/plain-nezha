@@ -277,16 +277,14 @@ html[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
 html.dark[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
   background-color: #808080;
 }
-/* Bar tracks have no background at all (2026-11-19 用户点名「不要进度条
-   背景」): the components no longer paint bg-primary/15 and there is no
-   dark-mode black either — the unfilled part of a bar shows the page
-   through it. The stripe gaps in the fill show black via a same-shape
-   black underlay behind the fill (2026-11-19 用户点名「换成黑色」;
-   a white underlay was tried and rejected earlier the same evening). */
+/* Bar tracks pure black in dark mode (2026-11-17 用户点名「进度条也纯黑」，
+   指暗色模式；亮模式保持组件的 bg-primary/15 柔和轨道）。 */
+html.dark .bar-track {
+  background-color: #000;
+}
 /* Progress bars are built from vertical lines (2026-11-17 用户点名
    「进度条改成由竖线组成」): a repeating mask cuts every solid fill into
-   1px lines with 0.5px gaps (2026-11-19 用户点名「竖线1 间隙0.5」),
-   so all fill colours (theme, danger, carbon
+   2px lines with 0.5px gaps, so all fill colours (theme, danger, carbon
    gray) and the neon gradient keep working unchanged. The percentage
    figures are siblings of the fill, so they stay solid. Corners are
    rounded as the components draw them (an experiment with square
@@ -294,8 +292,8 @@ html.dark[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
 div.relative.h-full.bg-emerald-500,
 div.relative.h-full.bg-amber-500,
 div.relative.h-full.bg-red-500 {
-  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 1.5px);
-  mask-image: repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 1.5px);
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 2.5px);
+  mask-image: repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 2.5px);
 }
 /* Light mode (2026-11-17 用户连点两处): row speed figures in black, and
    bar fills brightened. The speed rule outranks the tz colour rules above
