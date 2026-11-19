@@ -22,6 +22,14 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const text = label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)
   return (
     <div className="relative h-[15px] w-full overflow-hidden rounded-[4px] bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
+      {/* White underlay under the striped fill: the mask gaps in the fill
+          show this white instead of the track (2026-11-19 用户点名
+          「进度条间隙改成白色」). No brightness filter, so gaps stay pure
+          white while the fill keeps its dimming. */}
+      <div
+        className="absolute inset-y-0 left-0 bg-white transition-[width] duration-500"
+        style={{ width: `${v}%` }}
+      />
       <div
         className={cn("relative h-full rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)] brightness-[0.7] transition-[width] duration-500", barTone(v))}
         style={{ width: `${v}%` }}
