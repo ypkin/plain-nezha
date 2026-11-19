@@ -21,7 +21,7 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const v = pct === null ? 0 : Math.min(100, Math.max(0, pct))
   const text = label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)
   return (
-    <div className="relative h-[15px] w-full overflow-hidden rounded-[4px] bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
+    <div className="relative h-[15px] w-full overflow-hidden rounded-[4px] bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
       {/* White underlay under the striped fill: the mask gaps in the fill
           show this white instead of the track (2026-11-19 用户点名
           「进度条间隙改成白色」). No brightness filter, so gaps stay pure

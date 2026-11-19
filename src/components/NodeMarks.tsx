@@ -127,7 +127,7 @@ export function Meter({
   // the figure itself still carries the exact value.
   const showFill = v >= floor
   return (
-    <div title={title} className={cn("relative h-1.5 w-full overflow-hidden rounded-full bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]", className)}>
+    <div title={title} className={cn("relative h-1.5 w-full overflow-hidden rounded-full bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]", className)}>
       {showFill && (
         <>
           {/* White underlay: stripe gaps in the fill show white, same as
