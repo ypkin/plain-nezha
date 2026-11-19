@@ -759,6 +759,20 @@ function applyTraffic(nodes: Node[]): Node[] {
           id: key, start: cal.start, offset: 0, base_rx: cal.baseRx, base_tx: cal.baseTx,
         })
       }
+      // A host reboot resets the lifetime counters below the recorded
+      // base; without re-baselining, the deltas clamp to 0 and the
+      // month figure pins at the offset forever (the 2026-11-18 kernel
+      // reboots froze five nodes this way). Mirror the uncalibrated
+      // path above: restart the base at the current counter and
+      // persist it the same way a rollover is persisted.
+      if (node.total_rx < cal.baseRx || node.total_tx < cal.baseTx) {
+        if (node.total_rx < cal.baseRx) cal.baseRx = node.total_rx
+        if (node.total_tx < cal.baseTx) cal.baseTx = node.total_tx
+        saveTrafficCals()
+        void postCal("/cal/calibrate", {
+          id: key, start: cal.start, offset: cal.offset, base_rx: cal.baseRx, base_tx: cal.baseTx,
+        })
+      }
       const drx = Math.max(0, node.total_rx - cal.baseRx)
       const dtx = Math.max(0, node.total_tx - cal.baseTx)
       node.month_used = cal.offset + meteredLocal(drx, dtx, node.traffic_mode)
