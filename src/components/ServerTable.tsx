@@ -25,9 +25,13 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
       {/* White underlay under the striped fill: the mask gaps in the fill
           show this white instead of the track (2026-11-19 用户点名
           「进度条间隙改成白色」). No brightness filter, so gaps stay pure
-          white while the fill keeps its dimming. */}
+          white while the fill keeps its dimming. It must keep the fill's
+          own rounded-full silhouette: as a plain rectangle its corners
+          stuck out past the fill's rounded ends and read as a white
+          background block (2026-11-19 用户截图点名「去掉进度条白色背景」
+          ＋「保留白色间隙」). */}
       <div
-        className="absolute inset-y-0 left-0 bg-white transition-[width] duration-500"
+        className="absolute inset-y-0 left-0 rounded-full bg-white transition-[width] duration-500"
         style={{ width: `${v}%` }}
       />
       <div
