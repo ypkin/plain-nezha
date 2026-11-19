@@ -30,14 +30,3 @@ export function nodeServices(name: string): string[] {
 
 /** Nezha panel ids of the fleet nodes that run check-services.py. */
 export const SERVICE_CHECK_IDS = new Set([101, 110, 116, 121, 134, 138, 145, 148, 149, 150, 151, 153])
-
-/**
- * Table column text: the static list, minus services the live check
- * explicitly says stopped. Unknown stays listed (the probe could not
- * tell); with no live data the static list is shown unchanged.
- */
-export function liveServicesList(name: string, live?: Record<string, string> | null): string[] {
-  const list = nodeServices(name)
-  if (!live) return list
-  return list.filter((s) => live[s] !== "stopped")
-}

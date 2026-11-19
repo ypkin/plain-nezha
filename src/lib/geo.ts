@@ -118,41 +118,6 @@ export const CC_GEO: Record<string, [number, number]> = {
     0
   ]
 }
-export const CC_NAME: Record<string, string> = {
-  "CN": "China",
-  "HK": "Hong Kong",
-  "MO": "Macao",
-  "TW": "Taiwan",
-  "JP": "Japan",
-  "KR": "South Korea",
-  "SG": "Singapore",
-  "US": "United States",
-  "CA": "Canada",
-  "GB": "United Kingdom",
-  "DE": "Germany",
-  "FR": "France",
-  "NL": "Netherlands",
-  "RU": "Russia",
-  "AU": "Australia",
-  "AQ": "Antarctica"
-}
-export const CC_CITY: Record<string, string> = {
-  "CN": "Beijing",
-  "HK": "Hong Kong",
-  "MO": "Macao",
-  "TW": "Taipei",
-  "JP": "Tokyo",
-  "KR": "Seoul",
-  "SG": "Singapore",
-  "US": "Washington",
-  "CA": "Ottawa",
-  "GB": "London",
-  "DE": "Berlin",
-  "FR": "Paris",
-  "NL": "Amsterdam",
-  "RU": "Moscow",
-  "AU": "Canberra"
-}
 export const NODE_CITY: Record<string, string> = {
   "home": "Wuhan",
   "star": "Paris",
