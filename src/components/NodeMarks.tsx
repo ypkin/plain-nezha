@@ -113,6 +113,20 @@ export function barTone(pct: number): string {
 }
 
 /**
+ * The fill every meter shares: barTone's colour, dimmed a step, striped
+ * by the mask in index.css. One markup for the table's main bars and the
+ * small meters, so a fill change lands in both. `v` is the clamped
+ * percentage the caller already computed.
+ */
+export function BarFill({ v, children }: { v: number; children?: ReactNode }) {
+  return (
+    <div className={cn("relative h-full rounded-full transition-[width] duration-500 brightness-[0.7] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)]", barTone(v))} style={{ width: `${v}%` }}>
+      {children}
+    </div>
+  )
+}
+
+/**
  * A capsule meter in shadcn's progress shape: a track one step off the surface,
  * the fill in the status colour, the figure written beside it rather than on
  * it. `children` are drawn over the fill, positioned against it.
@@ -128,11 +142,7 @@ export function Meter({
   const showFill = v >= floor
   return (
     <div title={title} className={cn("h-1.5 w-full overflow-hidden rounded-full bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]", className)}>
-      {showFill && (
-        <div className={cn("relative h-full rounded-full transition-[width] duration-500 brightness-[0.7] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)]", barTone(v))} style={{ width: `${v}%` }}>
-          {children}
-        </div>
-      )}
+      {showFill && <BarFill v={v}>{children}</BarFill>}
     </div>
   )
 }
@@ -143,8 +153,6 @@ export function Meter({
 // 2.2 to 5.49; `bytes` reaches 7.19 at "1023 MB"; `rate` 10.09 at "1023.0 MB/s".
 // Rounded up, since other UI fonts are a few percent wider than the one these
 // were measured in.
-export const SLOT = { compact: 7.2, bytes: 7.3, rate: 10.2 }
-
 /**
  * A figure that changes on every push, held in a slot wide enough for the widest
  * form it can take, so a node moving from 19K/s to 8.19K/s leaves the rest of the

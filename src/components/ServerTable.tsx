@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react"
 
-import { barTone, Dot, Flag, OsIcon } from "@/components/NodeMarks"
+import { BarFill, Dot, Flag, OsIcon } from "@/components/NodeMarks"
 import { RowDetails } from "@/components/RowDetails"
 import { StatBar } from "@/components/StatBar"
 import { Badge } from "@/components/ui/badge"
@@ -22,10 +22,7 @@ function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const text = label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)
   return (
     <div className="relative h-[15px] w-full overflow-hidden rounded-[4px] bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
-      <div
-        className={cn("relative h-full rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.28),inset_0_-1px_1px_rgba(0,0,0,0.25)] brightness-[0.7] transition-[width] duration-500", barTone(v))}
-        style={{ width: `${v}%` }}
-      />
+      <BarFill v={v} />
       <span className="tnum bar-num absolute inset-0 flex items-center justify-center text-[10px] leading-none text-zinc-300">
         {text}
       </span>
