@@ -16,6 +16,7 @@
             { "value": "tz-amber", "label": "琥珀" },
             { "value": "tz-dusk", "label": "暮紫" },
             { "value": "tz-neon", "label": "霓虹" },
+            { "value": "tz-flame", "label": "赤焰" },
       { "value": "tz-carbon", "label": "碳黑" }
     ] },
     { "key": "grain_percent", "type": "number", "label": "默认噪点强度 (%)", "default": 16, "min": 0, "max": 100, "help": "Zen Browser 质感噪点颗粒强度（0-100%）" },
