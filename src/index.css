@@ -218,18 +218,6 @@ html:not(.dark) .stat-bar span {
 html[data-theme-preset^="tz-"] body {
   background-image: none;
 }
-/* 赤焰专属：页面最顶部一条灰带 + 红虚线（2026-11-20 用户贴 losantos
-   面板裁图点名要的元素，逐像素采样：灰带 #3C3C3C 高 11px，下沿红虚线
-   #AE3931 高 3px、线段 12px/间隔 11px，虚线空隙透黑 #0A0A0B）。
-   只覆盖 tz-flame，不动其他主题；深浅模式同形。 */
-html[data-theme-preset="tz-flame"] body::before {
-  content: "";
-  display: block;
-  height: 14px;
-  background:
-    repeating-linear-gradient(90deg, #AE3931 0 12px, #0A0A0B 12px 23px) bottom / 100% 3px no-repeat,
-    linear-gradient(#3C3C3C, #3C3C3C) top / 100% 11px no-repeat;
-}
 html[data-theme-preset^="tz-"] header.sticky {
   background-color: var(--card);
   box-shadow: 0 1px 0 var(--tz-line), 0 0 28px var(--tz-glow);
