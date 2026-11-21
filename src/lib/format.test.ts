@@ -5,7 +5,7 @@
 // Nothing imports it, so the bundle never includes it.
 import {
   axisBytes, axisTop, bytes, compact, cpuName, daysUntil, dayUsage, despike, distro, duration, ewma, metered,
-  monthUsage, osName, pair, periodStart, quarters, timeTicks, uptime, virtName,
+  monthUsage, msAxis, osName, pair, periodStart, quarters, timeTicks, uptime, virtName,
 } from "./format.ts"
 
 let failed = 0
@@ -53,6 +53,15 @@ eq(quarters(axisTop(2_621_440, 1024, 1024)).map(axisBytes),
    ["0 B", "1 MB", "2 MB", "3 MB", "4 MB"], "峰值 2.5 MB/s 的四条刻度")
 eq(quarters(axisTop(1_258_291, 1024, 1024)).map(axisBytes),
    ["0 B", "512 KB", "1 MB", "1.5 MB", "2 MB"], "峰值 1.2 MB/s 的四条刻度")
+
+// msAxis: the latency axis snaps outward to whole steps -- 100/200/300 in the
+// few-hundred-ms band the probes live in, finer steps for nearby lines.
+eq(msAxis(232, 391).ticks, [200, 300, 400], "跨太平洋延迟取 100 整步")
+eq(msAxis(232, 391).domain, [200, 400], "域与刻度两端一致")
+eq(msAxis(70, 130).ticks, [50, 100, 150], "百毫秒上下取 50 整步")
+eq(msAxis(12, 28).ticks, [10, 20, 30], "近距离线路取 10 整步")
+eq(msAxis(3, 9).ticks, [0, 5, 10], "个位数延迟取 5 整步")
+eq(msAxis(300, 300).ticks, [300, 400], "平线也要留出一段域")
 // 轴顶必须取自梯子而非数据本身。十进制梯子配合 1024 进制的 scale 最大仅到
 // 10·1024^k，越过该档后 find 落空，`?? target` 将轴顶回退为 max，网格线随之变为
 // max/4 这类非整值，正是本函数要避免的情形。该回退仅在 [4,40)·1024^k 的窄带内

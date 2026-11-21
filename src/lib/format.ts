@@ -305,6 +305,25 @@ export function quarters(top: number): number[] {
 }
 
 /**
+ * Round-number domain and ticks for the latency axis, which is not anchored
+ * at zero (see the YAxis in NodeDetail): the data's span is snapped outward
+ * to whole steps, so a band living at 230-390 ms gets 200/300/400 rather
+ * than the 225/270/315/360/405 recharts auto-fits to the exact span.
+ *
+ * The step follows the magnitude the probes live in: hundreds of ms for the
+ * trans-Pacific lines, tens for nearby ones. Every tick is a whole number.
+ */
+export function msAxis(min: number, max: number): { domain: [number, number]; ticks: number[] } {
+  const step = max > 150 ? 100 : max > 60 ? 50 : max > 15 ? 10 : 5
+  const lo = Math.floor(min / step) * step
+  let hi = Math.ceil(max / step) * step
+  if (hi <= lo) hi = lo + step
+  const ticks: number[] = []
+  for (let v = lo; v <= hi; v += step) ticks.push(v)
+  return { domain: [lo, hi], ticks }
+}
+
+/**
  * Hampel filter (Hampel 1974; MATLAB ships it as `hampel`). A sample more than
  * `sigmas` robust deviations from the median of its window is replaced by that
  * median, while everything else passes through unchanged, which is what

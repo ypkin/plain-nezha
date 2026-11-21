@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Toggle } from "@/components/ui/toggle"
 import type { Node } from "@/lib/api"
 import {
-  axisBytes, axisTop, bytes, clockFor, despike, ewma, quarters, rate, timeTicks, uptime,
+  axisBytes, axisTop, bytes, clockFor, despike, ewma, msAxis, quarters, rate, timeTicks, uptime,
 } from "@/lib/format"
 import { fetchHistory, inRanges, LATENCY_HOURS, LATENCY_RANGES, RANGES, type History, type Point, type Series } from "@/lib/history"
 import { knownPing, recordPing } from "@/lib/pings"
@@ -319,6 +319,34 @@ export function Latency({
   // both.
   const drawn = (id: number) => `${despiked ? (smoothed ? "f" : "s") : smoothed ? "e" : "t"}${id}`
 
+  // The Y axis on round numbers (100, 200, 300, ...), snapped from the span
+  // of what is actually drawn in the zoomed window: the lines, plus the band
+  // and the raw underlay when a single probe shows them.
+  const yAxis = (() => {
+    const keys = shownProbes.map((s) => drawn(s.id))
+    if (shownProbes.length === 1) {
+      const s = shownProbes[0]
+      keys.push(`${despiked ? "c" : "b"}${s.id}`)
+      if (smoothed) keys.push(`${despiked ? "s" : "t"}${s.id}`)
+    }
+    let lo = Infinity
+    let hi = -Infinity
+    for (let i = from; i <= to; i++) {
+      const row = pingRows[i] as Record<string, unknown> | undefined
+      if (!row) continue
+      for (const k of keys) {
+        const v = row[k]
+        for (const n of Array.isArray(v) ? v : [v]) {
+          if (typeof n === "number" && Number.isFinite(n)) {
+            if (n < lo) lo = n
+            if (n > hi) hi = n
+          }
+        }
+      }
+    }
+    return Number.isFinite(lo) ? msAxis(lo, hi) : null
+  })()
+
   return (
     <section className={cn("space-y-3", frame)}>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 max-md:gap-x-2">
@@ -400,8 +428,9 @@ export function Latency({
                 <CartesianGrid className="stroke-border" vertical={false} />
                 <XAxis {...timeAxis(pingRows, hours, from, to)} />
                 {/* Not anchored at zero: these lines live in a narrow band far from
-                    it, and zero flattens every wobble. */}
-                <YAxis unit="ms" width={52} domain={["auto", "auto"]} {...AXIS} />
+                    it, and zero flattens every wobble. The band's edges snap to
+                    round steps instead (msAxis), so the labels read 100/200/300. */}
+                <YAxis unit="ms" width={52} domain={yAxis?.domain ?? ["auto", "auto"]} ticks={yAxis?.ticks} {...AXIS} />
                 <Tooltip
                   labelFormatter={(ts) => new Date(Number(ts)).toLocaleString("zh-CN")}
                   // The line is drawn from what answered, so without this a bucket
