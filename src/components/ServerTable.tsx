@@ -222,7 +222,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
         <TableCell className={cn(COL.expiry, "tnum text-muted-foreground")}><Expiry node={node} /></TableCell>
       </TableRow>
       {open && (
-        <TableRow className="border-b bg-muted/25 hover:bg-muted/25">
+        <TableRow className="bg-muted/25 hover:bg-muted/25">
           <TableCell colSpan={13} className="p-0! text-left whitespace-normal">
             <RowDetails node={node} />
           </TableCell>
@@ -461,7 +461,7 @@ export function ServerTableSkeleton() {
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="divide-y divide-border/30">
+        <div>
           <div className="flex h-9 items-center px-4 bg-muted/20">
             <Skeleton className="h-3 w-full" />
           </div>
