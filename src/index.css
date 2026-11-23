@@ -282,6 +282,38 @@ html.dark[data-theme-preset="tz-carbon"] div.relative.h-full.bg-emerald-500 {
 html.dark .bar-track {
   background-color: #000;
 }
+/* Sector gauge on phones in dark mode (2026-11-24 用户点名「手机端暗模式
+   进度条改成扇形」,又点名「扇形在左数据右」): the list bars swap for a
+   disc whose filled wedge sweeps clockwise from the top by the percentage,
+   the figure written to the right of the disc. Fill colours mirror the bar ladder — theme line colour for
+   the ok segment (neon solid cyan, carbon gray), amber/red untouched —
+   and the same dark-mode dimming. Everywhere else the striped bar stays. */
+.bar-sector { display: none; }
+@media (max-width: 640px) {
+  html.dark .bar-normal { display: none; }
+  html.dark .bar-sector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 15px;
+  }
+}
+.bar-sector-svg { width: 14px; height: 14px; display: block; flex: none; }
+.bar-sector-track { fill: rgba(255, 255, 255, 0.07); }
+.bar-sector-fill { filter: brightness(0.7); }
+.bar-sector-fill.tone-ok { fill: var(--color-emerald-500, #00bc7d); }
+html[data-theme-preset^="tz-"] .bar-sector-fill.tone-ok { fill: var(--tz-line); }
+html[data-theme-preset="tz-neon"] .bar-sector-fill.tone-ok { fill: #22d3ee; }
+html.dark[data-theme-preset="tz-carbon"] .bar-sector-fill.tone-ok { fill: #808080; }
+.bar-sector-fill.tone-warn { fill: var(--color-amber-500, #f59e0b); }
+.bar-sector-fill.tone-danger { fill: var(--color-red-500, #ef4444); }
+.bar-sector-num {
+  font-size: 9px;
+  line-height: 1;
+  color: #e4e4e7;
+  margin-left: 2px;
+}
 /* Progress bars are built from vertical lines (2026-11-17 用户点名
    「进度条改成由竖线组成」): a repeating mask cuts every solid fill into
    2px lines with 0.5px gaps, so all fill colours (theme, danger, carbon

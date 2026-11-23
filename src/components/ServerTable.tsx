@@ -12,21 +12,47 @@ import type { Node } from "@/lib/api"
 import { compact, CYCLES, daysUntil, distro, duration, FOREVER, money, percent } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
+/** Wedge path for the sector gauge: from the top, sweeping clockwise by v%. */
+function sectorPath(v: number): string {
+  const r = 9
+  const a = (v / 100) * 2 * Math.PI
+  const x = 10 + r * Math.sin(a)
+  const y = 10 - r * Math.cos(a)
+  return `M 10 10 L 10 ${10 - r} A ${r} ${r} 0 ${v > 50 ? 1 : 0} 1 ${x.toFixed(2)} ${y.toFixed(2)} Z`
+}
+
 /**
  * The figure inside its meter, nezha v0 style (2026-11-17 用户点名）:
  * a full-width chunky bar, the fill in the status colour, the percentage
  * written over the whole track so it stays centred as the fill moves.
+ * On a phone in dark mode the bar swaps for a sector gauge (2026-11-24
+ * 用户点名「手机端暗模式进度条改成扇形」): both forms are rendered and
+ * index.css picks which one shows, so nothing else has to know.
  */
 function Bar({ pct, label }: { pct: number | null; label?: string }) {
   const v = pct === null ? 0 : Math.min(100, Math.max(0, pct))
   const text = label ?? (pct === null ? "—" : `${v.toFixed(1)}%`)
+  const tone = v >= 90 ? "tone-danger" : v >= 80 ? "tone-warn" : "tone-ok"
   return (
-    <div className="relative h-[15px] w-full overflow-hidden rounded-[4px] bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
-      <BarFill v={v} />
-      <span className="tnum bar-num absolute inset-0 flex items-center justify-center text-[10px] leading-none text-zinc-300">
-        {text}
-      </span>
-    </div>
+    <>
+      <div className="bar-normal relative h-[15px] w-full overflow-hidden rounded-[4px] bg-primary/15 bar-track shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]">
+        <BarFill v={v} />
+        <span className="tnum bar-num absolute inset-0 flex items-center justify-center text-[10px] leading-none text-zinc-300">
+          {text}
+        </span>
+      </div>
+      <div className="bar-sector" aria-hidden="true">
+        <svg viewBox="0 0 20 20" className="bar-sector-svg">
+          <circle cx="10" cy="10" r="9" className="bar-sector-track" />
+          {v >= 99.95 ? (
+            <circle cx="10" cy="10" r="9" className={cn("bar-sector-fill", tone)} />
+          ) : v > 0 ? (
+            <path d={sectorPath(v)} className={cn("bar-sector-fill", tone)} />
+          ) : null}
+        </svg>
+        <span className="tnum bar-num bar-sector-num">{label ?? (pct === null ? "—" : `${Math.round(v)}%`)}</span>
+      </div>
+    </>
   )
 }
 
