@@ -469,8 +469,8 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
               ))}
             </TableRow>
           </TableHeader>
-          {/* Mobile rows: 7px padding each side (30px rows; desktop stays 4px). */}
-          <TableBody className="[&_td]:px-2 [&_td]:py-1 @max-3xl:[&_td]:px-0.5 @max-sm:[&_td]:py-[7px]">
+          {/* Mobile rows: 8.5px padding each side (33px rows; desktop stays 4px). */}
+          <TableBody className="[&_td]:px-2 [&_td]:py-1 @max-3xl:[&_td]:px-0.5 @max-sm:[&_td]:py-[8.5px]">
             {sortedNodes.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={13} className="py-12 text-center text-sm text-muted-foreground">
