@@ -471,9 +471,9 @@ export default function App() {
               <span className="truncate text-base font-bold">{site}</span>
             </Link>
             <nav aria-label="页面" className={cn(SEGMENT.list, "shrink-0")}>
-              <NavTab href="/" active={open === null} icon={House}>首页</NavTab>
+              <NavTab href="/" active={open === null} icon={House}>Home</NavTab>
               {sorted.length > 0 && (
-                <NavTab href={`/node/${open ?? sorted[0].id}`} active={open !== null} icon={ChartLine}>监控</NavTab>
+                <NavTab href={`/node/${open ?? sorted[0].id}`} active={open !== null} icon={ChartLine}>Monitor</NavTab>
               )}
             </nav>
           </div>

@@ -412,7 +412,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
                 : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
             )}
           >
-            全部 ({nodes.length})
+            {bi("All", "全部")} ({nodes.length})
           </button>
           {groups.map((g) => {
             const count = nodes.filter((n) => n.group === g).length
@@ -443,7 +443,7 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
                   : "bg-black/30 text-muted-foreground hover:text-foreground dark:bg-white/10 dark:hover:bg-white/15",
               )}
             >
-              未分组 ({nodes.filter((n) => !(n.group ?? "")).length})
+              {bi("Ungrouped", "未分组")} ({nodes.filter((n) => !(n.group ?? "")).length})
             </button>
           )}
           </div>
