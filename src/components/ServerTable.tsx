@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react"
 
-import { BarFill, Dot, Flag, OsIcon } from "@/components/NodeMarks"
+import { BarFill, Flag, OsIcon, SplitDot } from "@/components/NodeMarks"
 import { RowDetails } from "@/components/RowDetails"
 import { StatBar } from "@/components/StatBar"
 import { Badge } from "@/components/ui/badge"
@@ -169,7 +169,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
                 )}
               </span>
             ) : (
-              <Dot node={node} />
+              <SplitDot node={node} />
             )}
           </div>
           {/* Phones: the flag stands in for the dot — full colour online with a
@@ -191,7 +191,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
                 )}
               </span>
             ) : (
-              <span className={cn("size-2 rounded-full", node.online ? "bg-green-500 animate-breathe" : "bg-muted-foreground/40")} />
+              <SplitDot node={node} className="size-2" />
             )}
           </div>
         </TableCell>

@@ -62,6 +62,47 @@ export function Dot({ node, className }: { node: Node; className?: string }) {
   )
 }
 
+/** Status circle split into two halves (2026-11-24 用户定）：left half =
+ *  IPv4 (emerald when present), right half = IPv6 (theme line colour when
+ *  present); a missing stack's half is dim grey. Deployed-but-offline turns
+ *  both halves red; never-connected is all grey. */
+export function SplitDot({ node, className }: { node: Node; className?: string }) {
+  const isOnline = node.online
+  const isOffline = deployed(node)
+  const half = "absolute top-0 h-full w-1/2"
+  const absent = "bg-muted-foreground/30"
+  const stackText = node.ipv4 && node.ipv6 ? "双栈 (IPv4 + IPv6)" : node.ipv6 ? "仅 IPv6" : node.ipv4 ? "仅 IPv4" : "无网络栈标记"
+  return (
+    <span
+      title={`${isOnline ? "在线" : isOffline ? "离线" : "未接入"} · ${stackText}`}
+      className={cn("relative inline-flex size-2.5 shrink-0 align-middle", className)}
+    >
+      {isOnline && <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-50 animate-ping" />}
+      <span className="absolute inset-0 overflow-hidden rounded-full animate-breathe">
+        {!isOnline && isOffline ? (
+          <>
+            <span className={cn(half, "left-0 bg-red-500")} />
+            <span className={cn(half, "right-0 bg-red-500")} />
+          </>
+        ) : !isOnline ? (
+          <>
+            <span className={cn(half, "left-0 bg-muted-foreground/40")} />
+            <span className={cn(half, "right-0 bg-muted-foreground/40")} />
+          </>
+        ) : (
+          <>
+            <span className={cn(half, "left-0", node.ipv4 ? "bg-emerald-500" : absent)} />
+            <span
+              className={cn(half, "right-0", !node.ipv6 && absent)}
+              style={node.ipv6 ? { backgroundColor: "var(--tz-line, var(--primary))" } : undefined}
+            />
+          </>
+        )}
+      </span>
+    </span>
+  )
+}
+
 export function Flag({ code, className, showCode = true }: { code: string; className?: string; showCode?: boolean }) {
   if (!code) return <span className="text-muted-foreground">—</span>
   const src = FLAGS[code.toLowerCase()]
