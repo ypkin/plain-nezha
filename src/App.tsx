@@ -468,7 +468,7 @@ export default function App() {
           <div className="flex items-center gap-6 max-sm:gap-3">
             <Link href="/" className="flex min-w-0 items-center gap-2.5 font-semibold tracking-tight text-foreground transition-colors hover:opacity-90">
               <img src="/favicon-light.png" alt="" className="size-5 shrink-0" />
-              <span className="truncate text-base font-bold">{site}</span>
+              <span className="site-name truncate text-base font-bold">{site}</span>
             </Link>
             <nav aria-label="页面" className={cn(SEGMENT.list, "shrink-0")}>
               <NavTab href="/" active={open === null} icon={House}>Home</NavTab>
