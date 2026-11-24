@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react"
+import { useState, type CSSProperties, type ReactNode } from "react"
 import {
   siAlmalinux, siAlpinelinux, siArchlinux, siCentos, siDebian, siFedora, siLinux, siOpensuse, siRedhat,
   siRockylinux, siUbuntu, type SimpleIcon,
@@ -30,10 +30,21 @@ export function deployed(node: Node) {
   return node.cpu_cores > 0 || node.mem_total > 0
 }
 
+/** Negative animation delay pinned to the wall clock, so every status dot
+ *  shares one phase and the whole column breathes in unison (2026-11-24
+ *  用户点名「呼吸得一致」), no matter when its row mounted. */
+export function breatheDelay(periodMs: number): string {
+  return `${-((Date.now() % periodMs) / 1000).toFixed(3)}s`
+}
+
 /** Online, offline, or never heard from: a dot with a soft halo, with subtle pulse when online. */
 export function Dot({ node, className }: { node: Node; className?: string }) {
   const isOnline = node.online
   const isOffline = deployed(node)
+  // Frozen at mount: recomputing on re-render would re-time a running
+  // animation against its original start and break the shared phase.
+  const [pingDelay] = useState(() => breatheDelay(1000))
+  const [bDelay] = useState(() => breatheDelay(2400))
 
   return (
     <span
@@ -45,8 +56,8 @@ export function Dot({ node, className }: { node: Node; className?: string }) {
     >
       {isOnline ? (
         <>
-          <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-50 animate-ping" />
-          <span className="relative size-full rounded-full bg-emerald-500 animate-breathe" />
+          <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-50 animate-ping" style={{ animationDelay: pingDelay }} />
+          <span className="relative size-full rounded-full bg-emerald-500 animate-breathe" style={{ animationDelay: bDelay }} />
         </>
       ) : (
         <span

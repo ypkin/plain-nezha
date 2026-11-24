@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react"
 
-import { BarFill, Dot, Flag, OsIcon } from "@/components/NodeMarks"
+import { BarFill, breatheDelay, Dot, Flag, OsIcon } from "@/components/NodeMarks"
 import { RowDetails } from "@/components/RowDetails"
 import { StatBar } from "@/components/StatBar"
 import { Badge } from "@/components/ui/badge"
@@ -143,6 +143,8 @@ function sortNodes(nodes: Node[], field: SortField | null, order: SortOrder): No
 function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" | "fast" | "both" | null; open: boolean; onToggle: () => void; alt?: boolean }) {
   const m = node.online ? node.metrics : null
   const toggle = onToggle
+  // Frozen at mount so the mobile dot shares the column's breathing phase.
+  const [mDelay] = useState(() => breatheDelay(2400))
 
   return (
     <>
@@ -191,7 +193,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
                 )}
               </span>
             ) : (
-              <span className={cn("size-2 rounded-full", node.online ? "bg-green-500 animate-breathe" : "bg-muted-foreground/40")} />
+              <span className={cn("size-2 rounded-full", node.online ? "bg-green-500 animate-breathe" : "bg-muted-foreground/40")} style={node.online ? { animationDelay: mDelay } : undefined} />
             )}
           </div>
         </TableCell>
