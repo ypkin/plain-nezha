@@ -349,19 +349,19 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
   }, [groupNodes])
 
   const heads: [keyof typeof COL, ReactNode, SortField?][] = [
-    ["status", "状态"],
-    ["name", "名称", "name"],
-    ["location", "位置"],
-    ["os", "系统"],
-    ["uptime", "在线", "uptime"],
-    ["load", "负载", "load"],
-    ["speed", <>网速 ↑|↓</>, "speed"],
-    ["traffic", <>流量 ↑|↓</>],
+    ["status", "Status"],
+    ["name", "Name", "name"],
+    ["location", "Location"],
+    ["os", "System"],
+    ["uptime", "Uptime", "uptime"],
+    ["load", "Load", "load"],
+    ["speed", <>Speed ↑|↓</>, "speed"],
+    ["traffic", <>Traffic ↑|↓</>],
     ["bar", "CPU", "cpu"],
-    ["bar", "内存", "mem"],
-    ["bar", "硬盘", "disk"],
-    ["price", "续费", "price"],
-    ["expiry", "到期"],
+    ["bar", "Memory", "mem"],
+    ["bar", "Disk", "disk"],
+    ["price", "Price", "price"],
+    ["expiry", "Expiry"],
   ]
 
   return (

@@ -33,6 +33,9 @@ export type Node = {
   metrics: Metrics | null
   os: string
   kernel: string
+  /** Public egress addresses, collected out-of-band like the kernel (see /ips.json). Empty when unknown. */
+  ipv4: string
+  ipv6: string
   arch: string
   virt: string
   cpu_name: string
@@ -213,6 +216,37 @@ function ensureKernels(): Promise<void> {
   return kernelsFlight
 }
 
+// Node IP addresses are likewise absent from the panel payload, so they
+// are collected over SSH into a static /ips.json keyed by panel node ID
+// ({ipv4, ipv6} per node; either may be missing). Best-effort like kernels.
+const ipsById = new Map<number, { ipv4: string; ipv6: string }>()
+let ipsFetchedAt = 0
+let ipsFlight: Promise<void> | null = null
+
+function ensureIps(): Promise<void> {
+  if (Date.now() - ipsFetchedAt < 10 * 60_000) return Promise.resolve()
+  if (!ipsFlight) {
+    ipsFlight = (async () => {
+      try {
+        const res = await fetch("/ips.json", { signal: AbortSignal.timeout(5000) })
+        if (!res.ok) return
+        const data = (await res.json()) as Record<string, unknown>
+        for (const [key, value] of Object.entries(data)) {
+          const id = Number.parseInt(key, 10)
+          if (!Number.isFinite(id) || typeof value !== "object" || value === null) continue
+          const rec = value as { ipv4?: unknown; ipv6?: unknown }
+          ipsById.set(id, {
+            ipv4: typeof rec.ipv4 === "string" ? rec.ipv4 : "",
+            ipv6: typeof rec.ipv6 === "string" ? rec.ipv6 : "",
+          })
+        }
+        ipsFetchedAt = Date.now()
+      } catch { /* optional enrichment; ignore failures */ }
+    })().finally(() => { ipsFlight = null })
+  }
+  return ipsFlight
+}
+
 function mapServer(sv: V0Server, note: Note | null, notes: Map<number, Note | null>, nowMs: number): Node {
   const host = sv.Host ?? {}
   const state = sv.State ?? {}
@@ -260,6 +294,8 @@ function mapServer(sv: V0Server, note: Note | null, notes: Map<number, Note | nu
     },
     os: [osBase, host.PlatformVersion].filter(Boolean).join(" "),
     kernel: kernelsById.get(sv.ID) ?? "",
+    ipv4: ipsById.get(sv.ID)?.ipv4 ?? "",
+    ipv6: ipsById.get(sv.ID)?.ipv6 ?? "",
     arch: host.Arch ?? "",
     virt: host.Virtualization ?? "",
     cpu_name: cpuRaw.replace(/\s*\d+\s+(?:Physical|Virtual)\s+Core.*$/i, "").trim(),
@@ -342,6 +378,7 @@ function extractSnapshot(html: string): { now: number; servers: V0Server[] } | n
 
 async function fetchSnapshot(signal?: AbortSignal): Promise<Node[]> {
   await ensureKernels()
+  await ensureIps()
   const res = await fetch("/panel-snapshot", { signal })
   if (!res.ok) throw new ApiError(res.status, (await res.text()) || res.statusText)
   const html = await res.text()
@@ -1085,6 +1122,7 @@ export function subscribeNodes({ onNodes, onError }: NodeObserver) {
         if (!Array.isArray(data?.servers)) return
         const nowMs = data.now ?? Date.now()
         void ensureKernels()
+        void ensureIps()
         emit(data.servers.map((sv) => mapServer(sv, null, notesById, nowMs)))
         stopPolling()
         armWatchdog(current)

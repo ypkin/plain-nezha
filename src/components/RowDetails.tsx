@@ -333,6 +333,11 @@ function Overview({ node }: { node: Node }) {
           </span>
         </Line>
         {node.kernel && <Line label="内核">{node.kernel}</Line>}
+        {(node.ipv4 || node.ipv6) && (
+          <Line label="网络栈">
+            {node.ipv4 && node.ipv6 ? "双栈 (IPv4 + IPv6)" : node.ipv4 ? "仅 IPv4" : "仅 IPv6"}
+          </Line>
+        )}
         <Line label="架构">{[node.arch, virtName(node.virt)].filter(Boolean).join(" · ") || "—"}</Line>
         <Line label="CPU">{node.cpu_name ? `${cpuName(node.cpu_name)} × ${node.cpu_cores}` : `${node.cpu_cores} 核`}</Line>
         <Line label={node.online ? "在线" : "离线"}>
