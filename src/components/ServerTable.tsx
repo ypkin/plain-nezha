@@ -348,20 +348,28 @@ export function ServerTable({ nodes, selectedGroup, onSelectedGroupChange }: { n
     return { busiestId: busy?.id ?? null, fastestId: fast?.id ?? null }
   }, [groupNodes])
 
+  // Column titles are English on desktop; the mobile (container-sm) layout
+  // keeps the original Chinese titles.
+  const bi = (en: ReactNode, zh: ReactNode): ReactNode => (
+    <>
+      <span className="@max-sm:hidden">{en}</span>
+      <span className="hidden @max-sm:inline">{zh}</span>
+    </>
+  )
   const heads: [keyof typeof COL, ReactNode, SortField?][] = [
-    ["status", "Status"],
-    ["name", "Name", "name"],
-    ["location", "Location"],
-    ["os", "System"],
-    ["uptime", "Uptime", "uptime"],
-    ["load", "Load", "load"],
-    ["speed", <>Speed ↑|↓</>, "speed"],
-    ["traffic", <>Traffic ↑|↓</>],
+    ["status", bi("Status", "状态")],
+    ["name", bi("Name", "名称"), "name"],
+    ["location", bi("Location", "位置")],
+    ["os", bi("System", "系统")],
+    ["uptime", bi("Uptime", "在线"), "uptime"],
+    ["load", bi("Load", "负载"), "load"],
+    ["speed", bi(<>Speed ↑|↓</>, <>网速 ↑|↓</>), "speed"],
+    ["traffic", bi(<>Traffic ↑|↓</>, <>流量 ↑|↓</>)],
     ["bar", "CPU", "cpu"],
-    ["bar", "Memory", "mem"],
-    ["bar", "Disk", "disk"],
-    ["price", "Price", "price"],
-    ["expiry", "Expiry"],
+    ["bar", bi("Memory", "内存"), "mem"],
+    ["bar", bi("Disk", "硬盘"), "disk"],
+    ["price", bi("Price", "续费"), "price"],
+    ["expiry", bi("Expiry", "到期")],
   ]
 
   return (
