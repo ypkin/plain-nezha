@@ -62,43 +62,39 @@ export function Dot({ node, className }: { node: Node; className?: string }) {
   )
 }
 
-/** Status circle split into two halves (2026-11-24 用户定）：left half =
- *  IPv4 (emerald when present), right half = IPv6 (theme line colour when
- *  present); a missing stack's half is dim grey. Deployed-but-offline turns
- *  both halves red; never-connected is all grey. */
+/** Status ring split into two arcs (2026-11-24 用户定：双色圆环）: left arc =
+ *  IPv4 (emerald when present), right arc = IPv6 (theme line colour when
+ *  present); a missing stack's arc is dim grey. Deployed-but-offline turns
+ *  the whole ring red; never-connected is all grey. */
 export function SplitDot({ node, className }: { node: Node; className?: string }) {
   const isOnline = node.online
   const isOffline = deployed(node)
-  const half = "absolute top-0 h-full w-1/2"
-  const absent = "bg-muted-foreground/30"
   const stackText = node.ipv4 && node.ipv6 ? "双栈 (IPv4 + IPv6)" : node.ipv6 ? "仅 IPv6" : node.ipv4 ? "仅 IPv4" : "无网络栈标记"
+  const dim = { stroke: "var(--muted-foreground)", strokeOpacity: 0.3 }
+  const left = !isOnline && isOffline
+    ? { stroke: "#ef4444" }
+    : !isOnline
+      ? { stroke: "var(--muted-foreground)", strokeOpacity: 0.4 }
+      : node.ipv4
+        ? { stroke: "#10b981" }
+        : dim
+  const right = !isOnline && isOffline
+    ? { stroke: "#ef4444" }
+    : !isOnline
+      ? { stroke: "var(--muted-foreground)", strokeOpacity: 0.4 }
+      : node.ipv6
+        ? { stroke: "var(--tz-line, var(--primary))" }
+        : dim
   return (
     <span
       title={`${isOnline ? "在线" : isOffline ? "离线" : "未接入"} · ${stackText}`}
       className={cn("relative inline-flex size-2.5 shrink-0 align-middle", className)}
     >
       {isOnline && <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-50 animate-ping" />}
-      <span className="absolute inset-0 overflow-hidden rounded-full animate-breathe">
-        {!isOnline && isOffline ? (
-          <>
-            <span className={cn(half, "left-0 bg-red-500")} />
-            <span className={cn(half, "right-0 bg-red-500")} />
-          </>
-        ) : !isOnline ? (
-          <>
-            <span className={cn(half, "left-0 bg-muted-foreground/40")} />
-            <span className={cn(half, "right-0 bg-muted-foreground/40")} />
-          </>
-        ) : (
-          <>
-            <span className={cn(half, "left-0", node.ipv4 ? "bg-emerald-500" : absent)} />
-            <span
-              className={cn(half, "right-0", !node.ipv6 && absent)}
-              style={node.ipv6 ? { backgroundColor: "var(--tz-line, var(--primary))" } : undefined}
-            />
-          </>
-        )}
-      </span>
+      <svg viewBox="0 0 20 20" className="relative size-full animate-breathe" aria-hidden="true">
+        <path d="M 10 3 A 7 7 0 0 0 10 17" fill="none" strokeWidth="4" {...left} />
+        <path d="M 10 3 A 7 7 0 0 1 10 17" fill="none" strokeWidth="4" {...right} />
+      </svg>
     </span>
   )
 }
