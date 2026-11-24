@@ -138,6 +138,23 @@ function sortNodes(nodes: Node[], field: SortField | null, order: SortOrder): No
   })
 }
 
+// Network-stack mini dots under the status dot: left = IPv4, right = IPv6,
+// solid (theme colour) when the stack exists per the panel note, hollow when
+// it doesn't. Two 3px dots + 2px gap = 8px, inside the 10px status dot's
+// diameter.
+function StackDots({ node }: { node: Node }) {
+  const dot = "size-[3px] rounded-full"
+  return (
+    <span
+      className="flex items-center justify-center gap-[2px]"
+      title={node.ipv4 && node.ipv6 ? "双栈 (IPv4 + IPv6)" : node.ipv6 ? "仅 IPv6" : node.ipv4 ? "仅 IPv4" : undefined}
+    >
+      <span className={cn(dot, node.ipv4 ? "bg-primary" : "border border-muted-foreground/50")} />
+      <span className={cn(dot, node.ipv6 ? "bg-primary" : "border border-muted-foreground/50")} />
+    </span>
+  )
+}
+
 // Accordion: the open row is owned by ServerTable, not by each row,
 // so opening one node always closes the previously opened one.
 function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" | "fast" | "both" | null; open: boolean; onToggle: () => void; alt?: boolean }) {
@@ -158,7 +175,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
         )}
       >
         <TableCell className={cn(COL.status, "text-center")}>
-          <div className="flex items-center justify-center @max-sm:hidden">
+          <div className="flex flex-col items-center justify-center gap-[3px] @max-sm:hidden">
             {badge ? (
               <span className="inline-flex items-center gap-0 text-[13px] leading-none">
                 {(badge === "busy" || badge === "both") && (
@@ -171,11 +188,12 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
             ) : (
               <Dot node={node} />
             )}
+            <StackDots node={node} />
           </div>
           {/* Phones: the flag stands in for the dot — full colour online with a
               tiny green dot beside it, dimmed offline. A busy/fastest mark
               replaces it, side by side when one node is both. */}
-          <div className="hidden items-center justify-center @max-sm:flex">
+          <div className="hidden flex-col items-center justify-center gap-[3px] @max-sm:flex">
             {badge ? (
               <span
                 className={cn(
@@ -193,6 +211,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
             ) : (
               <span className={cn("size-2 rounded-full", node.online ? "bg-green-500 animate-breathe" : "bg-muted-foreground/40")} />
             )}
+            <StackDots node={node} />
           </div>
         </TableCell>
         <TableCell className={cn(COL.name, "text-left font-medium")} title={node.name}>
