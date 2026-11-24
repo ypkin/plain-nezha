@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight } from "lucide-react"
 
-import { BarFill, deployed, Flag, OsIcon } from "@/components/NodeMarks"
+import { BarFill, Dot, Flag, OsIcon } from "@/components/NodeMarks"
 import { RowDetails } from "@/components/RowDetails"
 import { StatBar } from "@/components/StatBar"
 import { Badge } from "@/components/ui/badge"
@@ -140,37 +140,6 @@ function sortNodes(nodes: Node[], field: SortField | null, order: SortOrder): No
 
 // Accordion: the open row is owned by ServerTable, not by each row,
 // so opening one node always closes the previously opened one.
-// The whole status mark is just two small dots (2026-11-24 用户定：不要大圆点）:
-// left = IPv4 in emerald, right = IPv6 in the theme colour — the two dots
-// deliberately differ in colour. A missing stack's dot is hollow grey;
-// deployed-but-offline turns both red, never-connected leaves both hollow.
-function StackDots({ node }: { node: Node }) {
-  const dot = "size-[3px] rounded-full"
-  const hollow = "border border-muted-foreground/50"
-  const off = !node.online && deployed(node)
-  return (
-    <span
-      className="flex items-center justify-center gap-[2px]"
-      title={node.ipv4 && node.ipv6 ? "双栈 (IPv4 + IPv6)" : node.ipv6 ? "仅 IPv6" : node.ipv4 ? "仅 IPv4" : undefined}
-    >
-      {off ? (
-        <>
-          <span className={cn(dot, "bg-red-500")} />
-          <span className={cn(dot, "bg-red-500")} />
-        </>
-      ) : (
-        <>
-          <span className={cn(dot, node.online && node.ipv4 ? "bg-emerald-500" : hollow)} />
-          <span
-            className={cn(dot, !(node.online && node.ipv6) && hollow)}
-            style={node.online && node.ipv6 ? { backgroundColor: "var(--tz-line, var(--primary))" } : undefined}
-          />
-        </>
-      )}
-    </span>
-  )
-}
-
 function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" | "fast" | "both" | null; open: boolean; onToggle: () => void; alt?: boolean }) {
   const m = node.online ? node.metrics : null
   const toggle = onToggle
@@ -189,7 +158,7 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
         )}
       >
         <TableCell className={cn(COL.status, "text-center")}>
-          <div className="flex flex-col items-center justify-center gap-[3px] @max-sm:hidden">
+          <div className="flex items-center justify-center @max-sm:hidden">
             {badge ? (
               <span className="inline-flex items-center gap-0 text-[13px] leading-none">
                 {(badge === "busy" || badge === "both") && (
@@ -199,13 +168,14 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
                   <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse", badge === "both" && "-ml-1")}>⚡</span>
                 )}
               </span>
-            ) : null}
-            <StackDots node={node} />
+            ) : (
+              <Dot node={node} />
+            )}
           </div>
           {/* Phones: the flag stands in for the dot — full colour online with a
               tiny green dot beside it, dimmed offline. A busy/fastest mark
               replaces it, side by side when one node is both. */}
-          <div className="hidden flex-col items-center justify-center gap-[3px] @max-sm:flex">
+          <div className="hidden items-center justify-center @max-sm:flex">
             {badge ? (
               <span
                 className={cn(
@@ -220,8 +190,9 @@ function Row({ node, badge, open, onToggle, alt }: { node: Node; badge?: "busy" 
                   <span title="最快节点" className={cn(m && m.net_rx > 1.5 * 1024 * 1024 && "animate-pulse", badge === "both" && "-ml-1")}>⚡</span>
                 )}
               </span>
-            ) : null}
-            <StackDots node={node} />
+            ) : (
+              <span className={cn("size-2 rounded-full", node.online ? "bg-green-500 animate-breathe" : "bg-muted-foreground/40")} />
+            )}
           </div>
         </TableCell>
         <TableCell className={cn(COL.name, "text-left font-medium")} title={node.name}>
