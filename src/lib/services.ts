@@ -11,7 +11,7 @@ export const NODE_SERVICES: Record<string, string[]> = {
   R3: [],
   home: [],
   CDT: ["hy2", "nezha-agent"],
-  sailor: ["hy2", "nezha-agent", "rkm", "x-ui"],
+  sailor: ["hy2", "nezha-agent", "rkm", "x-ui", "ForumMonitor"],
   haruka: ["哪吒面板", "hy2", "sing-box", "nezha-agent", "nginx"],
   kuroit: ["博客", "hy2", "nezha-agent", "DNS解锁", "tabby", "sing-box"],
   exact: ["LanQin 邮箱", "Plain 前端", "Prism 前端", "nezha-agent", "hy2"],
