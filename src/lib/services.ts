@@ -22,6 +22,7 @@ export const NODE_SERVICES: Record<string, string[]> = {
   alice: ["nezha-agent", "hy2", "WARP"],
   amd1: ["nginx", "图床", "nezha-agent", "hy2"],
   amd2: ["nezha-agent", "hy2"],
+  rn: ["博客", "nezha-agent"],
 }
 
 export function nodeServices(name: string): string[] {
@@ -29,4 +30,4 @@ export function nodeServices(name: string): string[] {
 }
 
 /** Nezha panel ids of the fleet nodes that run check-services.py. */
-export const SERVICE_CHECK_IDS = new Set([101, 110, 116, 121, 134, 138, 145, 148, 149, 150, 151, 153])
+export const SERVICE_CHECK_IDS = new Set([101, 110, 116, 121, 134, 138, 145, 148, 149, 150, 151, 153, 155])
