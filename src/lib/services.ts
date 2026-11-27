@@ -22,7 +22,7 @@ export const NODE_SERVICES: Record<string, string[]> = {
   alice: ["nezha-agent", "hy2", "WARP"],
   amd1: ["nginx", "图床", "nezha-agent", "hy2"],
   amd2: ["nezha-agent", "hy2"],
-  rn: ["博客", "nezha-agent"],
+  rn: ["nezha-agent"],
 }
 
 export function nodeServices(name: string): string[] {
